@@ -1,5 +1,9 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import { initDb, DB_PATH, seedTestData } from './db/db.js';
 
 
 // ROUTER IMPORTS
@@ -9,6 +13,7 @@ import eventsRoutes from './routes/events.js';
 import usersRoutes from './routes/users.js';
 import bookingsRoutes from './routes/bookings.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -44,12 +49,25 @@ app.use((error, req, res, next) => {
 });
 
 try {
+    // DB init
+    const dbDir = path.join(__dirname, 'db');
+    if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
+
+    if (!fs.existsSync(DB_PATH)) {
+        initDb();
+        seedTestData();
+    }
+
+    // App launch
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`
 ╔════════════════════════════════════════╗
 ║       MEALSHARE BACKEND RUNNING        ║
 ╚════════════════════════════════════════╝
 🚀 Server: http://localhost:${PORT}
+📊 Database: SQLite3 (${DB_PATH})
 ✅ CORS enabled for frontend on localhost:8000
 📝 API Documentation:
    - Auth:     POST /api/auth/signup
