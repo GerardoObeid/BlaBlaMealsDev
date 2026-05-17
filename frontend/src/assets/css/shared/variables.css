@@ -1,0 +1,41 @@
+:root {
+  --primary-color: #d4a574;
+  --primary-dark: #c9945f;
+  --text-dark: #2c3e50;
+  --text-light: #666;
+  --text-muted: #999;
+  --bg-light: #f5f5f5;
+  --bg-lighter: #f5f0e8;
+  --border-light: #e8e0d5;
+  --border-muted: #b0a090;
+  --error-bg: #fee;
+  --error-color: #c33;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 30px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 60px;
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+
+  --transition-fast: 0.3s ease;
+  --transition-smooth: 0.5s ease;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 20px rgba(212, 165, 116, 0.3);
+
+  --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-size-sm: 0.85rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.05rem;
+  --font-size-xl: 0.95rem;
+}
