@@ -3,12 +3,6 @@
 @import "../shared/forms.css";
 
 .landing-page {
-  --content-max-width: 1400px;
-  --landing-bg: #ede8e2;
-  --header-bg: #f5f1ed;
-  --search-bg: #e7dcca;
-  --footer-bg: #2c2c2c;
-
   width: 100%;
   background-color: var(--landing-bg);
   font-family: var(--font-family);
@@ -18,7 +12,8 @@
 /* Header */
 .header {
   background-color: var(--header-bg);
-  padding: var(--spacing-4xl) calc(var(--spacing-5xl) * 1.33);
+  height: var(--navbar-height);
+  padding-top: var(--spacing-sm);
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -194,8 +189,9 @@
 .footer {
   background-color: var(--footer-bg);
   color: var(--text-muted);
-  padding: var(--spacing-5xl);
-  margin-top: var(--spacing-5xl);
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
 }
 
 .footer-content {

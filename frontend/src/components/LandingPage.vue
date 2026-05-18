@@ -28,7 +28,7 @@
         <div class="hero-image">
           <div class="image-placeholder">
             <img
-              src="../../assets/images/dinner_party.jpg"
+              src="../assets/images/dinner_party.jpg"
               alt="Dining Experience"
             />
           </div>
@@ -55,7 +55,7 @@
             <input
               id="people"
               type="number"
-              placeholder="Value"
+              placeholder="0"
               v-model="form.people"
             />
           </div>
@@ -115,12 +115,13 @@
       <h2>Share a Meal. Reduce Costs.</h2>
       <p>
         Offer a seat at your table or save on grocery costs with your empty
-        chairs. It's simple: publish your meal, and your guests will split the
-        cost of ingredients with you.
+        chairs.
       </p>
-      <button class="btn-outline" @click="navigateToLogin">
-        Share a Meal
-      </button>
+      <p>
+        It's simple: publish your meal, and your guests will split the cost of
+        ingredients with you.
+      </p>
+      <button class="btn-outline" @click="navigateToLogin">Share a Meal</button>
     </section>
 
     <!-- Footer -->
@@ -155,7 +156,7 @@
 
 <script>
 import { useRouter } from "vue-router";
-import { MEAL_CUISINES } from "../../utils/constants";
+import { MEAL_CUISINES } from "../utils/constants";
 
 export default {
   name: "LandingPage",
@@ -198,5 +199,5 @@ export default {
 </script>
 
 <style scoped>
-@import "../../assets/css/components/LandingPage.css";
+@import "../assets/css/components/LandingPage.css";
 </style>

@@ -38,4 +38,22 @@
   --font-size-base: 1rem;
   --font-size-lg: 1.05rem;
   --font-size-xl: 0.95rem;
+
+  /* Landing Page Colors */
+  --content-max-width: 1400px;
+  --landing-bg: #ede8e2;
+  --header-bg: #f5f1ed;
+  --search-bg: #e7dcca;
+  --footer-bg: #c5c2bf;
+
+  /* Header/Navbar Styling */
+  --navbar-height: 70px;
+  --navbar-bg: var(--header-bg);
+  --navbar-text: var(--text-dark);
+  --navbar-text-secondary: var(--text-light);
+  --navbar-border: var(--border-light);
+  --navbar-logo-color: var(--primary-color);
+  --navbar-button-bg: var(--primary-color);
+  --navbar-button-text: white;
+  --navbar-button-hover: var(--primary-dark);
 }
