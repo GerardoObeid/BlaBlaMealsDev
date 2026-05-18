@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <div class="logo">
-        <span class="logo-icon">🍽️</span>
+        <img src="/logo.svg" alt="MealShare Logo" class="logo-icon" style="width: 28px; height: 28px;" />
         <span class="logo-text">MealShare</span>
       </div>
 

@@ -131,7 +131,7 @@
 }
 
 .btn-logout:hover {
-  background: var(--navbar-button-hover);
+  background: white;
   transform: scale(1.05);
 }
 

@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router/index.js";
 
 // Global CSS
+import "./assets/css/shared/global.css";
 import "./assets/css/shared/variables.css";
 import "./assets/css/shared/buttons.css";
 import "./assets/css/shared/forms.css";
