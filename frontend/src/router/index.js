@@ -1,9 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import { authStore } from "../stores/authStore";
+import { authService } from "../services/authService";
 
 // Pages
-import LandingPage from "../components/common/LandingPage.vue";
-import LoginPage from "../components/common/LoginPage.vue";
+import LandingPage from "../components/LandingPage.vue";
+import LoginPage from "../components/LoginPage.vue";
+import HomePage from "../components/HomePage.vue";
+import ProfilePage from "../components/ProfilePage.vue";
+import DashboardPage from "../components/DashboardPage.vue";
+import BookingsPage from "../components/BookingsPage.vue";
 
 const routes = [
   {
@@ -18,6 +22,30 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
+    path: "/home",
+    name: "Home",
+    component: HomePage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: ProfilePage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: DashboardPage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/bookings",
+    name: "Bookings",
+    component: BookingsPage,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/:pathMatch(.*)*",
     redirect: "/",
   },
@@ -26,6 +54,19 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = authService.isAuthenticated();
+  const requiresAuth = to.meta.requiresAuth;
+
+  if (requiresAuth && !isAuthenticated) {
+    next("/login");
+  } else if (to.path === "/login" && isAuthenticated) {
+    next("/home");
+  } else {
+    next();
+  }
 });
 
 export default router;

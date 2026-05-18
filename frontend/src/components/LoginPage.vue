@@ -32,14 +32,6 @@
           <small class="hint">Minimum 8 characters</small>
         </div>
 
-        <div class="form-group">
-          <label for="role">I am a...</label>
-          <select v-model="form.role" id="role" class="form-select">
-            <option value="user">👤 Regular User</option>
-            <option value="chef">👨‍🍳 Chef</option>
-          </select>
-        </div>
-
         <div v-if="error" class="error-message">{{ error }}</div>
         <div v-if="loading" class="loading-message">Processing...</div>
 
@@ -62,7 +54,7 @@
 
 <script>
 import { useRouter } from "vue-router";
-import { authService } from "../../services/authService";
+import { authService } from "../services/authService";
 
 export default {
   name: "LoginPage",
@@ -82,7 +74,6 @@ export default {
       form: {
         email: "",
         password: "",
-        role: "user",
       },
     };
   },
@@ -110,7 +101,6 @@ export default {
             password: this.form.password,
             firstName: this.form.email.split("@")[0],
             lastName: "User",
-            role: this.form.role,
           });
         } else {
           response = await this.authService.login(
@@ -119,9 +109,7 @@ export default {
           );
         }
 
-        const dashboardRoute =
-          response.user.role === "chef" ? "/chef/home" : "/user/home";
-        this.router.push(dashboardRoute);
+        this.router.push("/home");
       } catch (e) {
         this.error = e.message || "Login failed. Please try again.";
         console.error("Auth error:", e);
@@ -139,5 +127,5 @@ export default {
 </script>
 
 <style scoped>
-@import "../../assets/css/components/LoginPage.css";
+@import "../assets/css/components/LoginPage.css";
 </style>
