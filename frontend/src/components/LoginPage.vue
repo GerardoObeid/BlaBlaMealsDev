@@ -7,6 +7,30 @@
       </div>
 
       <form @submit.prevent="submit" class="login-form">
+        <div v-if="isSignUp" class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            id="firstName"
+            v-model="form.firstName"
+            type="text"
+            placeholder="John"
+            :required="isSignUp"
+            class="form-input"
+          />
+        </div>
+
+        <div v-if="isSignUp" class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            id="lastName"
+            v-model="form.lastName"
+            type="text"
+            placeholder="Doe"
+            :required="isSignUp"
+            class="form-input"
+          />
+        </div>
+
         <div class="form-group">
           <label for="email">Email Address</label>
           <input
@@ -74,6 +98,8 @@ export default {
       form: {
         email: "",
         password: "",
+        firstName: "", // Added to form state
+        lastName: "",  // Added to form state
       },
     };
   },
@@ -81,8 +107,15 @@ export default {
     async submit() {
       this.error = null;
 
+      // Validate base fields
       if (!this.form.email || !this.form.password) {
-        this.error = "Please fill in all fields";
+        this.error = "Please fill in all required fields";
+        return;
+      }
+
+      // Validate sign-up specific fields
+      if (this.isSignUp && (!this.form.firstName || !this.form.lastName)) {
+        this.error = "Please fill in your first and last name";
         return;
       }
 
@@ -96,11 +129,12 @@ export default {
       try {
         let response;
         if (this.isSignUp) {
+          // Now sending the actual values inputted by the user
           response = await this.authService.signup({
             email: this.form.email,
             password: this.form.password,
-            firstName: this.form.email.split("@")[0],
-            lastName: "User",
+            firstName: this.form.firstName,
+            lastName: this.form.lastName,
           });
         } else {
           response = await this.authService.login(
@@ -111,7 +145,7 @@ export default {
 
         this.router.push("/home");
       } catch (e) {
-        this.error = e.message || "Login failed. Please try again.";
+        this.error = e.message || "Request failed. Please try again.";
         console.error("Auth error:", e);
       } finally {
         this.loading = false;
