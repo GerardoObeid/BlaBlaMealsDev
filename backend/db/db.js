@@ -20,7 +20,7 @@ export function initDb() {
             password_hash text NOT NULL,
             profile_pic_url text DEFAULT 'uploads/default.png',
             bio text,
-            dietary_prefs text,
+            dietary_prefs text, 
             rating real DEFAULT 0.0
         );
 

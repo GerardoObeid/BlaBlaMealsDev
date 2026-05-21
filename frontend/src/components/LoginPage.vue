@@ -25,7 +25,7 @@
             id="lastName"
             v-model="form.lastName"
             type="text"
-            placeholder="Doe"
+            placeholder="Smith"
             :required="isSignUp"
             class="form-input"
           />
@@ -37,7 +37,7 @@
             id="email"
             v-model="form.email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="john.smith@example.com"
             required
             class="form-input"
           />
