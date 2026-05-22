@@ -22,7 +22,8 @@
               <span class="stat-label">hosted meal</span>
             </div>
             <div class="stat-item">
-              <span class="stat-value">4.5</span>
+              <span class="stat-value" v-if='dbUser?.rating > 0'>{{dbUser.rating}}</span>
+              <span class="stat-value" v-else>N/A</span>
               <span class="stat-label">rate</span>
             </div>
             <div class="stat-item">
@@ -70,15 +71,7 @@
         <h2 class="section-title">Attended Meals</h2>
         
         <div class="meals-grid" v-if="attendedMeals && attendedMeals.length > 0">
-          <div class="meal-card" v-for="(meal, index) in attendedMeals" :key="'meal-'+index">
-            <div class="meal-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
-                <line x1="16" y1="8" x2="2" y2="22"></line>
-                <line x1="17.5" y1="15" x2="9" y2="15"></line>
-              </svg>
-            </div>
-            
+          <div class="meal-card" v-for="(meal, index) in attendedMeals" :key="'meal-'+index">          
             <div class="meal-details">
               <h4 class="meal-title">{{ meal.mealTitle }}</h4>
               <span class="host-name">Host: {{ meal.hostFirstName }} {{ meal.hostLastName }}</span>
