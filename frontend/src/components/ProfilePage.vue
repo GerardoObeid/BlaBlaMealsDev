@@ -27,7 +27,8 @@
               <span class="stat-label">rate</span>
             </div>
             <div class="stat-item">
-              <span class="stat-value">2</span>
+              <span class="stat-value" v-if='receivedReviews && receivedReviews.length > 0'>{{receivedReviews.length}}</span>
+              <span class="stat-value" v-else>0</span>
               <span class="stat-label">reviews</span>
             </div>
             
@@ -87,15 +88,18 @@
 
       <section class="reviews-section">
         <h2 class="section-title">Reviews</h2>
-        <div class="reviews-grid">
-          <div class="review-item" v-for="n in 3" :key="'review-'+n">
-            <h4 class="reviewer-name">John Doe</h4>
-            <span class="review-date">march 2026</span>
+        <div class="reviews-grid" v-if="receivedReviews && receivedReviews.length > 0">
+          <div class="review-item" v-for="(review, index) in receivedReviews" :key="'review-'+index">
+            <h4 class="reviewer-name">{{ review.reviewerFirstName }} {{ review.reviewerLastName }}</h4>
+            <span class="review-date">{{ formatEventDate(review.eventDate) }}</span>
             <p class="review-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-              do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              <strong>⭐ {{ review.rating }}/5</strong><br/>
+              {{ review.comment }}
             </p>
           </div>
+        </div>
+        <div v-else>
+          <p class="bio-text">You haven't received any reviews yet.</p>
         </div>
       </section>
     </main>
@@ -150,6 +154,7 @@ export default {
         hostedEvents: 0 // Added to state
       },
       attendedMeals: [],
+      receivedReviews: [],
       isEditingBio: false,
       editedBio: "",
       isSavingBio: false
@@ -199,6 +204,7 @@ export default {
       this.stats.mealsAttended = response.stats.mealsAttended || 0;
       this.stats.hostedEvents = response.stats.hostedEvents; 
       this.attendedMeals = response.attendedMeals || [];
+      this.receivedReviews = response.receivedReviews || [];
 
     } catch (error) {
       console.error("Failed to load dynamic profile stats:", error);

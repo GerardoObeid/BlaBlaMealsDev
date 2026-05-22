@@ -42,13 +42,34 @@ router.get('/profile', authMiddleware, (req, res) => {
         `);
         const attendedMealsList = attendedMealsStmt.all(userId);
 
+
+        const receivedReviewsStmt = db.prepare(`
+            SELECT 
+                r.rating, 
+                r.comment, 
+                u.first_name as reviewerFirstName, 
+                u.last_name as reviewerLastName, 
+                e.datetime as eventDate
+            FROM ratings r
+            JOIN bookings b ON r.booking_id = b.id
+            JOIN events e ON b.event_id = e.id
+            JOIN meals m ON e.meal_id = m.id
+            JOIN users u ON r.reviewer_id = u.id
+            WHERE m.host_id = ?
+            ORDER BY e.datetime DESC
+        `);
+        const receivedReviewsList = receivedReviewsStmt.all(userId);
+
+
+
         return res.status(200).json({
             user: userData,
             stats: {
                 mealsAttended: mealsAttended,
                 hostedEvents: hostedEventsCount
             },
-            attendedMeals : attendedMealsList
+            attendedMeals : attendedMealsList,
+            receivedReviews : receivedReviewsList
         });
     } catch (error) {
         console.error('Error fetching profile:', error);

@@ -307,3 +307,82 @@
     grid-template-columns: 1fr;
   }
 }
+
+.reviews-section {
+  margin-bottom: 60px;
+}
+
+/* Updated for horizontal scrolling */
+.reviews-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto; /* Enables horizontal scroll */
+  padding: 10px 5px 20px 5px; /* Added padding to prevent shadows from clipping and make room for scrollbar */
+  scroll-snap-type: x mandatory; /* Makes the scrolling snap nicely to each card */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile devices */
+}
+
+/* Custom scrollbar to match your theme */
+.reviews-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.reviews-grid::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+.reviews-grid::-webkit-scrollbar-thumb {
+  background: #EBB65B; 
+  border-radius: 4px;
+}
+.reviews-grid::-webkit-scrollbar-thumb:hover {
+  background: #c9945f; 
+}
+
+/* Updated to create a "square" card around the review */
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  /* Sizing and Flex properties */
+  min-width: 300px; /* Ensures the card stays a nice size and doesn't shrink */
+  max-width: 350px;
+  flex-shrink: 0; /* Prevents the card from squeezing when there are many reviews */
+  scroll-snap-align: start; /* Snaps the card to the left when scrolling */
+  
+  /* The "Square" Card Styling */
+  background: #ffffff;
+  border: 2px solid #e8e0d5; /* Soft border */
+  border-left: 5px solid #EBB65B; /* Golden accent line on the left side */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(235, 182, 91, 0.15); /* Glows slightly on hover */
+}
+
+.reviewer-name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.review-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+}
