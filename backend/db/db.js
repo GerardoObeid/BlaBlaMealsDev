@@ -20,7 +20,7 @@ export function initDb() {
             password_hash text NOT NULL,
             profile_pic_url text DEFAULT 'uploads/default.png',
             bio text,
-            dietary_prefs text,
+            dietary_prefs text, 
             rating real DEFAULT 0.0
         );
 
@@ -128,7 +128,7 @@ export function seedTestData() {
             for (const e of events) insertEvent.run(e);
         });
         insertEventTx([
-            [1, '2026-06-01 20:00:00', '123 Pasta Street', 4, 1, 15.50],
+            [1, '2026-05-01 20:00:00', '123 Pasta Street', 4, 1, 15.50],
             [2, '2026-06-05 19:30:00', '456 Noodle Ave', 6, 6, 12.00]
         ]);
 
