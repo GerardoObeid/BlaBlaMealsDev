@@ -22,7 +22,7 @@
               <span class="stat-label">hosted meal</span>
             </div>
             <div class="stat-item">
-              <span class="stat-value" v-if='dbUser?.rating > 0'>{{dbUser.rating}}</span>
+              <span class="stat-value" v-if='dbUser?.rating > 0'>{{dbUser.rating}} / 5 </span>
               <span class="stat-value" v-else>N/A</span>
               <span class="stat-label">rate</span>
             </div>
