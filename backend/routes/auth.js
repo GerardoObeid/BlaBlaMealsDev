@@ -28,6 +28,23 @@ function validatePassword(password) {
   return password.length >= 8;
 }
 
+export function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Access token required" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || "secret", (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
+    req.user = { id: user.sub, email: user.email };
+    next();
+  });
+}
+
 router.post("/signup", async (req, res) => {
   try {
     const { email, password, firstName, lastName } = req.body;

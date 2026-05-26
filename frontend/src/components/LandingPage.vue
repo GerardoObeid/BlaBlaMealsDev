@@ -4,7 +4,12 @@
     <header class="header">
       <div class="header-content">
         <div class="logo">
-          <img src="/logo.svg" alt="MealShare Logo" class="logo-icon" style="width: 28px; height: 28px;" />
+          <img
+            src="/logo.svg"
+            alt="MealShare Logo"
+            class="logo-icon"
+            style="width: 28px; height: 28px"
+          />
           <span class="logo-text">MealShare</span>
         </div>
         <nav class="nav">
@@ -121,7 +126,9 @@
         It's simple: publish your meal, and your guests will split the cost of
         ingredients with you.
       </p>
-      <button class="btn-outline" @click="navigateToLogin">Share a Meal</button>
+      <button class="btn-outline" @click="openShareMealModal">
+        Share a Meal
+      </button>
     </section>
 
     <!-- Footer -->
@@ -156,10 +163,17 @@
 
 <script>
 import { useRouter } from "vue-router";
+import CreateMealEventModal from "./CreateMealEventModal.vue";
+import { authService } from "../services/authService";
+import { api } from "../services/api";
+import { API_ENDPOINTS } from "../utils/constants";
 import { MEAL_CUISINES } from "../utils/constants";
 
 export default {
   name: "LandingPage",
+  components: {
+    CreateMealEventModal,
+  },
   setup() {
     const router = useRouter();
     return { router };
@@ -176,6 +190,8 @@ export default {
 
     return {
       cuisinesList: MEAL_CUISINES,
+      showMealEventModal: false,
+      userMeals: [],
 
       // 3. Establish defaults
       form: {
@@ -189,6 +205,47 @@ export default {
   methods: {
     navigateToLogin() {
       this.$router.push("/login");
+    },
+    openShareMealModal() {
+      const user = authService.getCurrentUser();
+      if (!user) {
+        this.navigateToLogin();
+        return;
+      }
+      this.loadUserMeals();
+      this.showMealEventModal = true;
+    },
+    closeMealEventModal() {
+      this.showMealEventModal = false;
+    },
+    async loadUserMeals() {
+      try {
+        const mealsResponse = await api.get(API_ENDPOINTS.MEALS.GET_USER_MEALS);
+        this.userMeals = mealsResponse.meals || [];
+      } catch (error) {
+        console.error("Failed to load user meals:", error);
+      }
+    },
+    async handleCreateMeal(mealData) {
+      try {
+        const response = await api.post(API_ENDPOINTS.MEALS.CREATE, mealData);
+        this.userMeals.push(response.meal);
+        alert("Meal created successfully!");
+        this.showMealEventModal = false;
+      } catch (error) {
+        console.error("Failed to create meal:", error);
+        alert("Error creating meal. Please try again.");
+      }
+    },
+    async handleCreateEvent(eventData) {
+      try {
+        const response = await api.post(API_ENDPOINTS.EVENTS.CREATE, eventData);
+        alert("Event created successfully!");
+        this.showMealEventModal = false;
+      } catch (error) {
+        console.error("Failed to create event:", error);
+        alert("Error creating event. Please try again.");
+      }
     },
     handleSearch() {
       console.log("Searching with criteria:", this.form);
