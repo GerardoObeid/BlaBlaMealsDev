@@ -1,0 +1,234 @@
+/* Inheriting global properties from landing page variables */
+.bookings-page {
+  width: 100%;
+  background-color: var(--landing-bg);
+  min-height: 100vh;
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  max-width: 900px; /* Constrains the width to match the mockup's centered look */
+  margin: 0 auto;
+  padding: 60px 20px;
+  width: 100%;
+}
+
+.page-title {
+  text-align: center;
+  color: #5C4A31; /* Earthy brown matching the mockup */
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 50px;
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: var(--text-dark);
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+}
+
+/* Booking Cards List */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.booking-card {
+  background-color: #F1D395; /* Golden beige matching the mockup */
+  border-radius: 16px;
+  padding: 24px 30px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+/* Base layout for the closed card */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.host-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.meal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meal-title {
+  margin: 0;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  width: fit-content;
+  user-select: none;
+}
+
+.menu-toggle:hover {
+  color: #000;
+}
+
+.datetime-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  align-self: flex-end; /* Pushes it to the bottom right of the flex container */
+  color: #222;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Expanded section styles */
+.card-details {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #333;
+  animation: fadeIn 0.3s ease;
+}
+
+.card-details p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.extra-info {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.confirmed {
+  background-color: #d4edda;
+  color: #155724;
+}
+.status-badge.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer matching other pages */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--text-muted);
+  padding: 40px 20px 20px;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-5xl);
+  max-width: var(--content-max-width);
+  margin: 0 auto 30px;
+}
+
+.footer-section h4 {
+  color: white;
+  margin-bottom: var(--spacing-xl);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section li {
+  margin-bottom: var(--spacing-md);
+}
+
+.footer-section a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+}
+
+.footer-section a:hover {
+  color: white;
+}
+
+.footer p {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .host-avatar {
+    margin-bottom: 10px;
+  }
+  .datetime-info {
+    align-self: flex-start;
+    margin-top: 10px;
+  }
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
