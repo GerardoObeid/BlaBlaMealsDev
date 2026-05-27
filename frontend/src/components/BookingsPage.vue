@@ -90,7 +90,6 @@ import { API_ENDPOINTS } from "../utils/constants";
 export default {
   name: "BookingsPage",
   components: {
-    Navbar,
   },
   data() {
     return {
