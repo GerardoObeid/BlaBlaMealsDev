@@ -56,16 +56,16 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const isAuthenticated = authService.isAuthenticated();
   const requiresAuth = to.meta.requiresAuth;
 
   if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (to.path === "/login" && isAuthenticated) {
-    next("/home");
-  } else {
-    next();
+    return "/login";
+  }
+
+  if (to.path === "/login" && isAuthenticated) {
+    return "/home";
   }
 });
 

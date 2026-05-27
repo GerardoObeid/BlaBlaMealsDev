@@ -28,6 +28,7 @@ export function initDb() {
             id integer PRIMARY KEY AUTOINCREMENT,
             host_id integer NOT NULL,
             title text NOT NULL,
+            cuisine text,
             description text NOT NULL,
             ingredients text NOT NULL,
             allergies_info text,
@@ -113,13 +114,13 @@ export function seedTestData() {
         ]);
 
         // 2. Insert Meals
-        const insertMeal = db.prepare('INSERT INTO meals (host_id, title, description, ingredients) VALUES (?, ?, ?, ?)');
+        const insertMeal = db.prepare('INSERT INTO meals (host_id, title, cuisine, description, ingredients) VALUES (?, ?, ?, ?, ?)');
         const insertMealTx = db.transaction((meals) => {
             for (const m of meals) insertMeal.run(m);
         });
         insertMealTx([
-            [1, 'Authentic Carbonara', 'A traditional Roman pasta dish made with eggs, pecorino, guanciale, and black pepper. No cream!', 'Pasta, Eggs, Pecorino Romano, Guanciale, Black Pepper'],
-            [2, 'Spicy Vegan Pad Thai', 'Classic street food from Thailand with a spicy kick, completely plant-based.', 'Rice Noodles, Tofu, Peanuts, Bean Sprouts, Chili, Tamarind']
+            [1, 'Authentic Carbonara', 'Italian', 'A traditional Roman pasta dish made with eggs, pecorino, guanciale, and black pepper. No cream!', 'Pasta, Eggs, Pecorino Romano, Guanciale, Black Pepper'],
+            [2, 'Spicy Vegan Pad Thai', 'Asian', 'Classic street food from Thailand with a spicy kick, completely plant-based.', 'Rice Noodles, Tofu, Peanuts, Bean Sprouts, Chili, Tamarind']
         ]);
 
         // 3. Insert Events

@@ -1,8 +1,12 @@
 <template>
   <div class="landing-page">
-    <Navbar />
+    <CreateMealEventModal
+      :isOpen="showMealEventModal"
+      :userMeals="userMeals"
+      @close="showMealEventModal = false"
+      @success="handleCreationSuccess"
+    />
 
-    <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-text">
@@ -23,7 +27,6 @@
       </div>
     </section>
 
-    <!-- Search Section -->
     <section class="search-section">
       <div class="search-section">
         <form @submit.prevent="handleSearch" class="search-container">
@@ -66,7 +69,6 @@
       </div>
     </section>
 
-    <!-- Value Props Section -->
     <section class="value-props">
       <div class="value-card">
         <div class="card-icon">🥘</div>
@@ -97,7 +99,6 @@
       </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section">
       <h2>Share a Meal. Reduce Costs.</h2>
       <p>
@@ -108,10 +109,9 @@
         It's simple: publish your meal, and your guests will split the cost of
         ingredients with you.
       </p>
-      <button class="btn-outline">Share a Meal</button>
+      <button class="btn-outline" @click="openMealModal">Share a Meal</button>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
@@ -142,13 +142,14 @@
 </template>
 
 <script>
-import Navbar from "./Navbar.vue";
-import { MEAL_CUISINES } from "../utils/constants";
+import CreateMealEventModal from "./CreateMealEventModal.vue";
+import { api } from "../services/api";
+import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
 
 export default {
   name: "HomePage",
   components: {
-    Navbar,
+    CreateMealEventModal,
   },
   data() {
     const now = new Date();
@@ -160,6 +161,8 @@ export default {
 
     return {
       cuisinesList: MEAL_CUISINES,
+      showMealEventModal: false,
+      userMeals: [],
       form: {
         date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}`,
@@ -170,7 +173,25 @@ export default {
   },
   methods: {
     handleSearch() {
+      // TODO: Implement search functionality based on form criteria
       console.log("Searching with criteria:", this.form);
+    },
+    openMealModal() {
+      this.loadUserMeals();
+      this.showMealEventModal = true;
+    },
+    async loadUserMeals() {
+      try {
+        const mealsResponse = await api.get(API_ENDPOINTS.MEALS.GET_USER_MEALS);
+        this.userMeals = mealsResponse.meals || [];
+      } catch (error) {
+        console.error("Failed to load user meals:", error);
+      }
+    },
+    // Triggers when the modal signals a successful entry generation
+    handleCreationSuccess() {
+      this.loadUserMeals(); // Keep context data reactive and fresh
+      this.showMealEventModal = false;
     },
   },
 };
