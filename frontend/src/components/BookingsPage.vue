@@ -1,7 +1,5 @@
 <template>
   <div class="bookings-page">
-    <Navbar />
-
     <main class="page-content">
       <h1 class="page-title">My Bookings</h1>
 
