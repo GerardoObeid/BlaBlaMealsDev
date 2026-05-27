@@ -21,12 +21,14 @@ export const API_ENDPOINTS = {
     CREATE: "/api/meals",
     UPDATE: (id) => `/api/meals/${id}`,
     DELETE: (id) => `/api/meals/${id}`,
+    GET_USER_MEALS: "/api/meals/user/meals",
   },
   EVENTS: {
     LIST: "/api/events",
     CREATE: "/api/events",
     UPDATE: (id) => `/api/events/${id}`,
     DELETE: (id) => `/api/events/${id}`,
+    GET_USER_EVENTS: "/api/events/user/events",
   },
   BOOKINGS: {
     CREATE: "/api/bookings",

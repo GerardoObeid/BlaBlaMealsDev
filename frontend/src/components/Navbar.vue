@@ -2,7 +2,12 @@
   <nav class="navbar">
     <div class="navbar-content">
       <div class="logo">
-        <img src="/logo.svg" alt="MealShare Logo" class="logo-icon" style="width: 28px; height: 28px;" />
+        <img
+          src="/logo.svg"
+          alt="MealShare Logo"
+          class="logo-icon"
+          style="width: 28px; height: 28px"
+        />
         <span class="logo-text">MealShare</span>
       </div>
 
@@ -75,17 +80,26 @@ export default {
       windowWidth: typeof window !== "undefined" ? window.innerWidth : 768,
     };
   },
+  watch: {
+    $route() {
+      this.refreshUser();
+    },
+  },
   mounted() {
-    this.currentUser = this.authService.getCurrentUser();
+    this.refreshUser();
     window.addEventListener("resize", this.handleResize);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    refreshUser() {
+      this.currentUser = this.authService.getCurrentUser();
+    },
     async logout() {
       this.menuOpen = false;
       await this.authService.logout();
+      // Route back to base landing page / login screen
       this.router.push("/");
     },
     getInitials(firstName, lastName) {
