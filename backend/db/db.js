@@ -124,13 +124,13 @@ export function seedTestData() {
         ]);
 
         // 3. Insert Events
-        const insertEvent = db.prepare('INSERT INTO events (meal_id, datetime, location_address, max_guests, available_seats, price) VALUES (?, ?, ?, ?, ?, ?)');
+        const insertEvent = db.prepare('INSERT INTO events (meal_id, datetime, location_address, max_guests, available_seats, price, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
         const insertEventTx = db.transaction((events) => {
             for (const e of events) insertEvent.run(e);
         });
         insertEventTx([
-            [1, '2026-05-01 20:00:00', '123 Pasta Street', 4, 1, 15.50],
-            [2, '2026-06-05 19:30:00', '456 Noodle Ave', 6, 6, 12.00]
+            [1, '2026-06-10 20:00:00', '15 Rue de la République, Antibes',  4, 3, 15.50, 43.5807, 7.1218],
+            [2, '2026-06-12 19:30:00', '8 Boulevard d\'Aguillon, Antibes',  6, 6, 12.00, 43.5812, 7.1261],
         ]);
 
         // 4. Insert Bookings
