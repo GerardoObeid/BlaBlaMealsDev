@@ -117,7 +117,7 @@ export function seedTestData() {
     // Hash a default password for the demo
     const passwordHash = bcrypt.hashSync("password", 10);
 
-    // 1. Insert Users
+    // 1. Insert Users (Includes new user Gerardo as ID 4)
     const insertUser = db.prepare(
       "INSERT INTO users (first_name, last_name, email, password_hash, bio, dietary_prefs) VALUES (?, ?, ?, ?, ?, ?)",
     );
@@ -149,9 +149,17 @@ export function seedTestData() {
         "Always looking for great dinners and new friends.",
         "Gluten-Free",
       ],
+      [
+        "Gerardo",
+        "Obeid",
+        "gerardo@example.com",
+        passwordHash,
+        "Passionate about local Mediterranean ingredients and full-stack development.",
+        "None",
+      ],
     ]);
 
-    // 2. Insert Meals
+    // 2. Insert Meals (Includes traditional Salade Niçoise as ID 7)
     const insertMeal = db.prepare(
       "INSERT INTO meals (host_id, title, cuisine, description, ingredients) VALUES (?, ?, ?, ?, ?)",
     );
@@ -173,18 +181,127 @@ export function seedTestData() {
         "Classic street food from Thailand with a spicy kick, completely plant-based.",
         "Rice Noodles, Tofu, Peanuts, Bean Sprouts, Chili, Tamarind",
       ],
+      [
+        3,
+        "Classic French Ratatouille",
+        "French",
+        "A hearty Provencal stew of summer vegetables. Served with crusty baguette.",
+        "Eggplant, Zucchini, Bell Peppers, Tomatoes, Herbs de Provence",
+      ],
+      [
+        1,
+        "Homemade Margherita Pizza",
+        "Italian",
+        "Wood-fired style pizza with fresh mozzarella, San Marzano tomatoes, and basil.",
+        "Flour, Yeast, San Marzano Tomatoes, Mozzarella, Fresh Basil",
+      ],
+      [
+        2,
+        "Sushi Platter Experience",
+        "Asian",
+        "A variety of fresh nigiri and maki rolls made with locally sourced fish.",
+        "Sushi Rice, Nori, Salmon, Tuna, Avocado, Soy Sauce",
+      ],
+      [
+        3,
+        "Traditional Coq au Vin",
+        "French",
+        "Chicken braised with wine, lardons, mushrooms, and garlic. A classic!",
+        "Chicken, Red Wine, Mushrooms, Bacon, Pearl Onions",
+      ],
+      [
+        4,
+        "Traditional Salade Niçoise",
+        "French",
+        "A classic, refreshing Mediterranean summer salad featuring fresh tuna, hard-boiled eggs, olives, and anchovies.",
+        "Tuna, Eggs, Niçoise Olives, Anchovies, Green Beans, Tomatoes, Olive Oil",
+      ],
     ]);
 
-    // 3. Insert Events
+    // 3. Insert Events (Configured with varying parameters and 2026 future dates for search optimization)
     const insertEvent = db.prepare(
-      "INSERT INTO events (meal_id, datetime, location_address, max_guests, available_seats, price) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO events (meal_id, datetime, location_address, max_guests, available_seats, price, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     );
     const insertEventTx = db.transaction((events) => {
       for (const e of events) insertEvent.run(e);
     });
     insertEventTx([
-      [1, "2026-05-01 20:00:00", "123 Pasta Street", 4, 1, 15.5],
-      [2, "2026-06-05 19:30:00", "456 Noodle Ave", 6, 6, 12.0],
+      // Mid-June 2026 Listings
+      [
+        1,
+        "2026-06-10 20:00:00",
+        "15 Rue de la République, Antibes",
+        4,
+        3,
+        15.5,
+        43.5807,
+        7.1218,
+      ],
+      [
+        2,
+        "2026-06-12 19:30:00",
+        "8 Boulevard d'Aguillon, Antibes",
+        6,
+        6,
+        12.0,
+        43.5812,
+        7.1261,
+      ],
+      [
+        3,
+        "2026-06-14 19:00:00",
+        "Place De Gaulle, Antibes",
+        5,
+        5,
+        18.0,
+        43.5822,
+        7.1225,
+      ],
+
+      // Late June / July 2026 Future Summer Events
+      [
+        4,
+        "2026-06-28 19:15:00",
+        "Avenue Robert Soleau, Antibes",
+        4,
+        4,
+        14.0,
+        43.5835,
+        7.1248,
+      ],
+      [
+        5,
+        "2026-07-04 19:30:00",
+        "Port Vauban, Antibes",
+        8,
+        8,
+        25.0,
+        43.5861,
+        7.1272,
+      ],
+      [6, "2026-07-12 19:45:00", "Cap d'Antibes", 6, 6, 30.0, 43.5539, 7.1283],
+
+      // Custom Future Events hosted by Gerardo (Meal 7)
+      [
+        7,
+        "2026-07-18 12:30:00",
+        "Boulevard Édouard Baudoin, Juan-les-Pins",
+        6,
+        6,
+        16.5,
+        43.5685,
+        7.1122,
+      ],
+      [
+        7,
+        "2026-07-25 20:00:00",
+        "Pinède Gould, Juan-les-Pins",
+        8,
+        8,
+        19.0,
+        43.567,
+        7.1145,
+      ],
     ]);
 
     // 4. Insert Bookings
