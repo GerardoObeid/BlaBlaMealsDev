@@ -79,6 +79,9 @@
 <script>
 import { useRouter } from "vue-router";
 import { authService } from "../services/authService";
+import { api } from "../services/api";
+import { API_ENDPOINTS } from "../utils/constants";
+import { toast } from "../utils/toast";
 
 export default {
   name: "LoginPage",
@@ -143,7 +146,25 @@ export default {
           );
         }
 
-        this.router.push("/home");
+        // Check for a pending booking from the search results page
+        const pendingEventId = sessionStorage.getItem(
+          "pendingBookingEventId"
+        );
+        if (pendingEventId) {
+          sessionStorage.removeItem("pendingBookingEventId");
+          try {
+            await api.post(API_ENDPOINTS.BOOKINGS.CREATE, {
+              eventId: parseInt(pendingEventId, 10),
+            });
+            toast.success("You have booked a meal successfully");
+          } catch (e) {
+            console.error("Auto-booking failed:", e);
+            toast.error(e.message || "Auto-booking failed");
+          }
+          this.router.push("/bookings");
+        } else {
+          this.router.push("/home");
+        }
       } catch (e) {
         this.error = e.message || "Request failed. Please try again.";
         console.error("Auth error:", e);

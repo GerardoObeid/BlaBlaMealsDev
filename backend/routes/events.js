@@ -1,14 +1,34 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import { getDb } from "../db/db.js";
 import { authenticateToken } from "./auth.js";
 
 const router = express.Router();
 
 // PUBLIC search endpoint — no authentication required (discovery feature)
+// If a valid token is present, exclude events the user has already booked.
 router.get("/search", (req, res) => {
   try {
     const { date, time, people, cuisine } = req.query;
     const db = getDb();
+
+    // Optional auth: try to extract userId from token (no 401 on failure)
+    let userId = null;
+    const authHeader = req.headers["authorization"];
+    if (authHeader) {
+      const token = authHeader.split(" ")[1];
+      if (token) {
+        try {
+          const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET || "secret"
+          );
+          userId = decoded.sub;
+        } catch {
+          // Invalid/expired token — silently ignore, treat as public
+        }
+      }
+    }
 
     let sql = `
       SELECT
@@ -33,6 +53,15 @@ router.get("/search", (req, res) => {
       WHERE 1=1
     `;
     const params = [];
+
+    // If authenticated, exclude events the user has already booked
+    if (userId) {
+      sql += ` AND NOT EXISTS (
+        SELECT 1 FROM bookings b
+        WHERE b.event_id = e.id AND b.guest_id = ? AND b.status = 'confirmed'
+      )`;
+      params.push(userId);
+    }
 
     // Date filter: match events on this specific day
     if (date) {

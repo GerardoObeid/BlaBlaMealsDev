@@ -143,6 +143,31 @@
   font-size: 0.9rem;
 }
 
+.booking-card .card-actions,
+.meal-card .card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn-cancel {
+  padding: 10px 24px;
+  background-color: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: var(--border-radius-md, 8px);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #dc2626;
+  color: white;
+  transform: scale(1.03);
+}
+
 .status-badge {
   padding: 2px 8px;
   border-radius: 12px;

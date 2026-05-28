@@ -193,6 +193,15 @@
                 ><strong>Date:</strong> {{ formatDate(event.datetime) }}</span
               >
             </div>
+            <div class="card-actions">
+              <button
+                class="btn-book"
+                @click="bookEvent(event)"
+                :disabled="event.available_seats < 1"
+              >
+                {{ event.available_seats < 1 ? 'Fully Booked' : 'Book' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -224,6 +233,7 @@ L.Icon.Default.mergeOptions({
 import { authService } from "../services/authService";
 import { api } from "../services/api";
 import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
+import { toast } from "../utils/toast";
 
 export default {
   name: "SearchResultsPage",
@@ -342,6 +352,28 @@ export default {
     },
     isExpanded(eventId) {
       return this.expandedCards.includes(eventId);
+    },
+    async bookEvent(event) {
+      // If not authenticated, store intent and redirect to login
+      if (!this.isAuthenticated) {
+        sessionStorage.setItem(
+          "pendingBookingEventId",
+          String(event.event_id)
+        );
+        this.$router.push("/login");
+        return;
+      }
+
+      // If authenticated, book directly then redirect to bookings
+      try {
+        await api.post(API_ENDPOINTS.BOOKINGS.CREATE, {
+          eventId: event.event_id,
+        });
+        toast.success("You have booked a meal successfully");
+        this.$router.push("/bookings");
+      } catch (error) {
+        toast.error(error.message || "Booking failed. Please try again.");
+      }
     },
     formatDate(datetimeStr) {
       if (!datetimeStr) return "";

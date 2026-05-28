@@ -266,6 +266,36 @@
   font-size: 0.85rem;
 }
 
+/* Book button container — bottom-right of expanded card */
+.meal-card .card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn-book {
+  padding: 10px 24px;
+  background-color: var(--primary-dark);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-book:hover {
+  background-color: var(--primary-color);
+  transform: scale(1.03);
+}
+
+.btn-book:disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
 @keyframes cardFadeIn {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }

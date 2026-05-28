@@ -47,6 +47,12 @@
               <span><strong>Seats Booked:</strong> {{ booking.guestCount }}</span>
               <span :class="['status-badge', booking.status]">{{ booking.status }}</span>
             </div>
+            
+            <div class="card-actions">
+              <button class="btn-cancel" @click="cancelBooking(booking.bookingId)">
+                Cancel
+              </button>
+            </div>
           </div>
 
         </div>
@@ -86,6 +92,7 @@
 import Navbar from "./Navbar.vue";
 import { api } from "../services/api";
 import { API_ENDPOINTS } from "../utils/constants";
+import { toast } from "../utils/toast";
 
 export default {
   name: "BookingsPage",
@@ -129,14 +136,27 @@ export default {
       return `${day}/${month}`;
     },
     // Formats ISO string into HH:MM like the mockup
-    formatTime(dateString) {
-      const date = new Date(dateString);
+    formatTime(datetimeStr) {
+      if (!datetimeStr) return '';
+      const date = new Date(datetimeStr.replace(' ', 'T'));
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
       return `${hours}:${minutes}`;
+    },
+    async cancelBooking(bookingId) {
+      if (!confirm("Are you sure you want to cancel this booking?")) return;
+      
+      try {
+        await api.delete(API_ENDPOINTS.BOOKINGS.DELETE(bookingId));
+        this.bookings = this.bookings.filter(b => b.bookingId !== bookingId);
+        toast.success("You have deleted a meal successfully");
+      } catch (error) {
+        console.error("Error cancelling booking:", error);
+        toast.error(error.message || "Failed to cancel booking");
+      }
     }
   },
-  mounted() {
+  async mounted() {
     this.fetchBookings();
   }
 };
