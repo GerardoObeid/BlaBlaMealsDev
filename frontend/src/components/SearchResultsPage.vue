@@ -75,7 +75,7 @@
       v-else-if="searchPerformed && results.length === 0"
       class="no-results-page"
     >
-      <span class="no-results-icon">🍽️</span>
+      <img src="/logo.svg" alt="MealShare Logo" class="no-results-logo" />
       <p>No meals found matching your criteria. Try adjusting your filters!</p>
     </div>
 

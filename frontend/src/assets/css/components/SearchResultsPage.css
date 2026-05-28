@@ -122,6 +122,9 @@
   flex: 1;
   overflow: hidden;
   min-height: 0;
+  max-width: var(--content-max-width);
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* Left column: scrollable cards */
@@ -342,9 +345,12 @@
   color: var(--text-light);
 }
 
-.no-results-page .no-results-icon {
-  font-size: 3.5rem;
+.no-results-page .no-results-logo {
+  width: 75px;
+  height: 75px;
   margin-bottom: var(--spacing-lg);
+  opacity: 0.6;
+  filter: grayscale(100%);
 }
 
 .no-results-page p {
