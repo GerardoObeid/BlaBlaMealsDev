@@ -2,12 +2,14 @@ import { helpers } from "../utils/helpers";
 import { authStore } from "../session/authStore";
 
 class ApiClient {
-  // Here goes the base URL of our API, eventually this needs to be changed to our production URL
-  constructor(baseURL = "http://localhost:3000") {
+  // Dynamically load the URL from Vite's environment variables
+  // The fallback ensures it doesn't break if an .env file goes missing locally
+  constructor(
+    baseURL = import.meta.env.VITE_API_URL || "http://localhost:3000",
+  ) {
     this.baseURL = baseURL;
     this.timeout = 10000;
   }
-
   getFullUrl(endpoint) {
     return `${this.baseURL}${endpoint}`;
   }
@@ -77,4 +79,6 @@ class ApiClient {
   }
 }
 
-export const api = new ApiClient("http://localhost:3000");
+export const api = new ApiClient(
+  import.meta.env.VITE_API_URL || "http://localhost:3000",
+);
