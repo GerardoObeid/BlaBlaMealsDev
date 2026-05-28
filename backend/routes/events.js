@@ -4,6 +4,80 @@ import { authenticateToken } from "./auth.js";
 
 const router = express.Router();
 
+// PUBLIC search endpoint — no authentication required (discovery feature)
+router.get("/search", (req, res) => {
+  try {
+    const { date, time, people, cuisine } = req.query;
+    const db = getDb();
+
+    let sql = `
+      SELECT
+        e.id AS event_id,
+        e.datetime,
+        e.location_address,
+        e.latitude,
+        e.longitude,
+        e.max_guests,
+        e.available_seats,
+        e.price,
+        m.id AS meal_id,
+        m.title AS meal_title,
+        m.cuisine,
+        m.description,
+        m.image_url,
+        u.first_name AS host_first_name,
+        u.last_name AS host_last_name
+      FROM events e
+      JOIN meals m ON e.meal_id = m.id
+      JOIN users u ON m.host_id = u.id
+      WHERE 1=1
+    `;
+    const params = [];
+
+    // Date filter: match events on this specific day
+    if (date) {
+      sql += ` AND date(e.datetime) = ?`;
+      params.push(date);
+    }
+
+    // Time filter: show events starting from selected hour up to +4 hours forward
+    if (time) {
+      const [hours, minutes] = time.split(":").map(Number);
+      const startMinutes = hours * 60 + minutes;
+      const endMinutes = Math.min(startMinutes + 4 * 60, 23 * 60 + 59); // Cap at 23:59
+
+      const startTime = `${String(Math.floor(startMinutes / 60)).padStart(2, "0")}:${String(startMinutes % 60).padStart(2, "0")}`;
+      const endTime = `${String(Math.floor(endMinutes / 60)).padStart(2, "0")}:${String(endMinutes % 60).padStart(2, "0")}`;
+
+      sql += ` AND strftime('%H:%M', e.datetime) >= ? AND strftime('%H:%M', e.datetime) <= ?`;
+      params.push(startTime, endTime);
+    }
+
+    // People filter: require enough available seats
+    if (people) {
+      const peopleCount = parseInt(people, 10);
+      if (!isNaN(peopleCount) && peopleCount > 0) {
+        sql += ` AND e.available_seats >= ?`;
+        params.push(peopleCount);
+      }
+    }
+
+    // Cuisine filter: only applied when a specific cuisine is selected
+    if (cuisine && cuisine.trim() !== "") {
+      sql += ` AND m.cuisine = ?`;
+      params.push(cuisine);
+    }
+
+    sql += ` ORDER BY e.datetime ASC`;
+
+    const events = db.prepare(sql).all(...params);
+    return res.status(200).json({ events });
+  } catch (error) {
+    console.error("Error searching events:", error);
+    return res.status(500).json({ message: "Error searching events" });
+  }
+});
+
 router.post("/", authenticateToken, (req, res) => {
   const {
     mealId,

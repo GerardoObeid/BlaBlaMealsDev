@@ -60,7 +60,7 @@
             <input
               id="people"
               type="number"
-              placeholder="0"
+              placeholder="1"
               v-model="form.people"
             />
           </div>
@@ -68,7 +68,7 @@
           <div class="search-field">
             <label for="cuisine">Type of food</label>
             <select id="cuisine" v-model="form.cuisine">
-              <option value="">Select a cuisine</option>
+              <option value="">Any cuisine</option>
               <option
                 v-for="cuisine in cuisinesList"
                 :key="cuisine"
@@ -83,6 +83,13 @@
         </form>
       </div>
     </section>
+
+    <SearchResults
+      v-if="searchPerformed"
+      :results="searchResults"
+      :userLocation="userLocation"
+      :loading="searchLoading"
+    />
 
     <!-- Value Props Section -->
     <section class="value-props">
@@ -164,15 +171,16 @@
 <script>
 import { useRouter } from "vue-router";
 import CreateMealEventModal from "./CreateMealEventModal.vue";
+import SearchResults from "./SearchResults.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
-import { API_ENDPOINTS } from "../utils/constants";
-import { MEAL_CUISINES } from "../utils/constants";
+import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
 
 export default {
   name: "LandingPage",
   components: {
     CreateMealEventModal,
+    SearchResults,
   },
   setup() {
     const router = useRouter();
@@ -192,13 +200,15 @@ export default {
       cuisinesList: MEAL_CUISINES,
       showMealEventModal: false,
       userMeals: [],
-
-      // 3. Establish defaults
+      searchResults: [],
+      searchLoading: false,
+      searchPerformed: false,
+      userLocation: { lat: 43.5808, lng: 7.1239 },
       form: {
-        date: `${year}-${month}-${day}`, // Outputs: "YYYY-MM-DD"
-        time: `${hours}:${minutes}`, // Outputs: "HH:MM"
+        date: `${year}-${month}-${day}`,
+        time: `${hours}:${minutes}`,
         people: "",
-        cuisine: "", // Empty string aligns with "Select a cuisine" placeholder
+        cuisine: "",
       },
     };
   },
@@ -247,9 +257,42 @@ export default {
         alert("Error creating event. Please try again.");
       }
     },
-    handleSearch() {
-      console.log("Searching with criteria:", this.form);
-      // TODO: Connect with API to fetch search results based on form criteria
+    async handleSearch() {
+      this.searchLoading = true;
+      this.searchPerformed = true;
+      this.searchResults = [];
+
+      // Get user location (best-effort, fallback to Antibes)
+      try {
+        const pos = await new Promise((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            timeout: 5000,
+          })
+        );
+        this.userLocation = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+      } catch {
+        // Keep Antibes fallback
+      }
+
+      // Build query string from form filters
+      const params = new URLSearchParams();
+      if (this.form.date) params.append("date", this.form.date);
+      if (this.form.time) params.append("time", this.form.time);
+      if (this.form.people) params.append("people", this.form.people);
+      if (this.form.cuisine) params.append("cuisine", this.form.cuisine);
+
+      try {
+        const url = `${API_ENDPOINTS.EVENTS.SEARCH}?${params.toString()}`;
+        const response = await api.get(url);
+        this.searchResults = response.events || [];
+      } catch (error) {
+        console.error("Search failed:", error);
+      } finally {
+        this.searchLoading = false;
+      }
     },
   },
 };
