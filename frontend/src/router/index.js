@@ -8,6 +8,7 @@ import HomePage from "../components/HomePage.vue";
 import ProfilePage from "../components/ProfilePage.vue";
 import DashboardPage from "../components/DashboardPage.vue";
 import BookingsPage from "../components/BookingsPage.vue";
+import SearchResultsPage from "../components/SearchResultsPage.vue";
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
     name: "Bookings",
     component: BookingsPage,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/search",
+    name: "Search",
+    component: SearchResultsPage,
   },
   {
     path: "/:pathMatch(.*)*",

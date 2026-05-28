@@ -84,13 +84,6 @@
       </div>
     </section>
 
-    <SearchResults
-      v-if="searchPerformed"
-      :results="searchResults"
-      :userLocation="userLocation"
-      :loading="searchLoading"
-    />
-
     <!-- Value Props Section -->
     <section class="value-props">
       <div class="value-card">
@@ -171,7 +164,6 @@
 <script>
 import { useRouter } from "vue-router";
 import CreateMealEventModal from "./CreateMealEventModal.vue";
-import SearchResults from "./SearchResults.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
 import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
@@ -180,7 +172,6 @@ export default {
   name: "LandingPage",
   components: {
     CreateMealEventModal,
-    SearchResults,
   },
   setup() {
     const router = useRouter();
@@ -200,10 +191,6 @@ export default {
       cuisinesList: MEAL_CUISINES,
       showMealEventModal: false,
       userMeals: [],
-      searchResults: [],
-      searchLoading: false,
-      searchPerformed: false,
-      userLocation: { lat: 43.5808, lng: 7.1239 },
       form: {
         date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}`,
@@ -257,42 +244,13 @@ export default {
         alert("Error creating event. Please try again.");
       }
     },
-    async handleSearch() {
-      this.searchLoading = true;
-      this.searchPerformed = true;
-      this.searchResults = [];
-
-      // Get user location (best-effort, fallback to Antibes)
-      try {
-        const pos = await new Promise((resolve, reject) =>
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            timeout: 5000,
-          })
-        );
-        this.userLocation = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        };
-      } catch {
-        // Keep Antibes fallback
-      }
-
-      // Build query string from form filters
-      const params = new URLSearchParams();
-      if (this.form.date) params.append("date", this.form.date);
-      if (this.form.time) params.append("time", this.form.time);
-      if (this.form.people) params.append("people", this.form.people);
-      if (this.form.cuisine) params.append("cuisine", this.form.cuisine);
-
-      try {
-        const url = `${API_ENDPOINTS.EVENTS.SEARCH}?${params.toString()}`;
-        const response = await api.get(url);
-        this.searchResults = response.events || [];
-      } catch (error) {
-        console.error("Search failed:", error);
-      } finally {
-        this.searchLoading = false;
-      }
+    handleSearch() {
+      const query = {};
+      if (this.form.date) query.date = this.form.date;
+      if (this.form.time) query.time = this.form.time;
+      if (this.form.people) query.people = this.form.people;
+      if (this.form.cuisine) query.cuisine = this.form.cuisine;
+      this.$router.push({ path: "/search", query });
     },
   },
 };
