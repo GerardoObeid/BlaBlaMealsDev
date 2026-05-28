@@ -60,7 +60,7 @@
             <input
               id="people"
               type="number"
-              placeholder="0"
+              placeholder="1"
               v-model="form.people"
             />
           </div>
@@ -68,7 +68,7 @@
           <div class="search-field">
             <label for="cuisine">Type of food</label>
             <select id="cuisine" v-model="form.cuisine">
-              <option value="">Select a cuisine</option>
+              <option value="">Any cuisine</option>
               <option
                 v-for="cuisine in cuisinesList"
                 :key="cuisine"
@@ -166,8 +166,7 @@ import { useRouter } from "vue-router";
 import CreateMealEventModal from "./CreateMealEventModal.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
-import { API_ENDPOINTS } from "../utils/constants";
-import { MEAL_CUISINES } from "../utils/constants";
+import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
 
 export default {
   name: "LandingPage",
@@ -192,13 +191,11 @@ export default {
       cuisinesList: MEAL_CUISINES,
       showMealEventModal: false,
       userMeals: [],
-
-      // 3. Establish defaults
       form: {
-        date: `${year}-${month}-${day}`, // Outputs: "YYYY-MM-DD"
-        time: `${hours}:${minutes}`, // Outputs: "HH:MM"
+        date: `${year}-${month}-${day}`,
+        time: `${hours}:${minutes}`,
         people: "",
-        cuisine: "", // Empty string aligns with "Select a cuisine" placeholder
+        cuisine: "",
       },
     };
   },
@@ -248,8 +245,12 @@ export default {
       }
     },
     handleSearch() {
-      console.log("Searching with criteria:", this.form);
-      // TODO: Connect with API to fetch search results based on form criteria
+      const query = {};
+      if (this.form.date) query.date = this.form.date;
+      if (this.form.time) query.time = this.form.time;
+      if (this.form.people) query.people = this.form.people;
+      if (this.form.cuisine) query.cuisine = this.form.cuisine;
+      this.$router.push({ path: "/search", query });
     },
   },
 };

@@ -45,7 +45,7 @@
             <input
               id="people"
               type="number"
-              placeholder="0"
+              placeholder="1"
               v-model="form.people"
             />
           </div>
@@ -53,7 +53,7 @@
           <div class="search-field">
             <label for="cuisine">Type of food</label>
             <select id="cuisine" v-model="form.cuisine">
-              <option value="">Select a cuisine</option>
+              <option value="">Any cuisine</option>
               <option
                 v-for="cuisine in cuisinesList"
                 :key="cuisine"
@@ -173,8 +173,12 @@ export default {
   },
   methods: {
     handleSearch() {
-      // TODO: Implement search functionality based on form criteria
-      console.log("Searching with criteria:", this.form);
+      const query = {};
+      if (this.form.date) query.date = this.form.date;
+      if (this.form.time) query.time = this.form.time;
+      if (this.form.people) query.people = this.form.people;
+      if (this.form.cuisine) query.cuisine = this.form.cuisine;
+      this.$router.push({ path: "/search", query });
     },
     openMealModal() {
       this.loadUserMeals();

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <ToastNotification />
     <Navbar v-if="isAuthenticated" />
     <router-view />
   </div>
@@ -7,12 +8,14 @@
 
 <script>
 import Navbar from "./components/Navbar.vue"; // Ensure this matches your path
+import ToastNotification from "./components/ToastNotification.vue";
 import { authService } from "./services/authService";
 
 export default {
   name: "App",
   components: {
     Navbar, // Registering it explicitly
+    ToastNotification,
   },
   data() {
     return {
