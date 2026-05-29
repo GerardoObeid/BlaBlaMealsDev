@@ -66,11 +66,15 @@ router.beforeEach((to, from) => {
   const isAuthenticated = authService.isAuthenticated();
   const requiresAuth = to.meta.requiresAuth;
 
+  // 1. If the route requires auth and user is NOT logged in, send to login
   if (requiresAuth && !isAuthenticated) {
     return "/login";
   }
 
-  if (to.path === "/login" && isAuthenticated) {
+  // 2. If user IS logged in and tries to go to Login OR the Landing page, send to home
+  const isPublicOnlyPage = to.path === "/login" || to.path === "/";
+
+  if (isPublicOnlyPage && isAuthenticated) {
     return "/home";
   }
 });
