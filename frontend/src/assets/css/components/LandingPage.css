@@ -72,20 +72,6 @@
   line-height: 1.6;
 }
 
-.image-placeholder {
-  width: 100%;
-  height: 300px;
-  background-color: var(--border-light);
-  border-radius: var(--border-radius-xl);
-  overflow: hidden;
-}
-
-.image-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* Search Section */
 .search-section {
   background-color: var(--search-bg);
@@ -182,7 +168,9 @@
   height: 48px;
   stroke: var(--primary-color);
   stroke-width: 1.75;
-  transition: transform var(--transition-fast), stroke var(--transition-fast);
+  transition:
+    transform var(--transition-fast),
+    stroke var(--transition-fast);
 }
 
 .value-card:hover .value-icon {
@@ -194,6 +182,25 @@
   font-size: var(--font-size-lg);
   color: var(--text-dark);
   margin-bottom: var(--spacing-md);
+}
+.hero-video,
+.video-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-xl);
+}
+
+.video-placeholder video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right bottom;
+  z-index: 1;
 }
 
 .value-card p {

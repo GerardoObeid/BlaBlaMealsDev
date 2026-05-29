@@ -30,12 +30,12 @@
             experiences
           </p>
         </div>
-        <div class="hero-image">
-          <div class="image-placeholder">
-            <img
-              src="../assets/images/dinner_party.jpg"
-              alt="Dining Experience"
-            />
+        <div class="hero-video">
+          <div class="video-placeholder">
+            <video autoplay muted loop playsinline>
+              <source src="/animvideo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
@@ -88,8 +88,20 @@
     <section class="value-props">
       <div class="value-card">
         <div class="card-icon">
-          <svg class="value-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v3M9 2v3M15 2v3M4 11h16a1 1 0 0 1 1 1v3a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6v-3a1 1 0 0 1 1-1z" />
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12 2v3M9 2v3M15 2v3M4 11h16a1 1 0 0 1 1 1v3a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6v-3a1 1 0 0 1 1-1z"
+            />
             <path d="M21 14h2M1 14h2" />
           </svg>
         </div>
@@ -102,7 +114,17 @@
       </div>
       <div class="value-card">
         <div class="card-icon">
-          <svg class="value-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -118,7 +140,17 @@
       </div>
       <div class="value-card">
         <div class="card-icon">
-          <svg class="value-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="1" x2="12" y2="23"></line>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>

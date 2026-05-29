@@ -44,4 +44,5 @@ az storage blob upload-batch \
     --overwrite \
     -o none
 
+
 echo "Deployment complete."
