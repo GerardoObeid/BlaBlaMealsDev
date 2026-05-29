@@ -28,10 +28,7 @@
           <input id="edit-location" v-model="editingEvent.location_address" type="text" class="form-input" />
         </div>
 
-        <div class="form-group">
-          <label for="edit-datetime">Date & Time</label>
-          <input id="edit-datetime" v-model="editingEvent.datetime" type="datetime-local" class="form-input" />
-        </div>
+        
 
         <div class="form-group">
           <label for="edit-datetime">Date & Time</label>
