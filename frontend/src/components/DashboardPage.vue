@@ -33,6 +33,23 @@
           <input id="edit-datetime" v-model="editingEvent.datetime" type="datetime-local" class="form-input" />
         </div>
 
+        <div class="form-group">
+          <label for="edit-datetime">Date & Time</label>
+          <input id="edit-datetime" v-model="editingEvent.datetime" type="datetime-local" class="form-input" />
+        </div>
+
+        <div class="guests-section">
+          <h4>Guests ({{ eventGuests.length }})</h4>
+          <ul v-if="eventGuests.length > 0" class="guest-list">
+            <li v-for="guest in eventGuests" :key="guest.booking_id" class="guest-item">
+              <span>{{ guest.first_name }} {{ guest.last_name }}</span>
+              <button @click.prevent="removeGuest(guest.booking_id)" class="btn-remove-guest">Remove</button>
+            </li>
+          </ul>
+          <p v-else class="no-guests-message">No guests have booked this event yet.</p>
+        </div>
+        
+
         <div class="edit-actions">
           <button @click="saveEventChanges" class="btn-primary">Save Changes</button>
           <button @click="closeEditModal" class="btn-outline">Cancel</button>
@@ -127,7 +144,8 @@ export default {
       // Modal State (Same as Landing Page)
       showMealEventModal: false,
       userMeals: [],
-      editingEvent: null
+      editingEvent: null,
+      eventGuests: []
     }
   },
   async mounted() {
@@ -146,10 +164,37 @@ export default {
     openEditModal(event) {
       // Create a copy of the event so we don't mutate the UI before saving
       this.editingEvent = { ...event };
+      this.loadEventGuests(event.id);
     },
     
     closeEditModal() {
       this.editingEvent = null;
+      this.eventGuests = [];
+    },
+
+    async loadEventGuests(eventId) {
+      try {
+        const response = await api.get(API_ENDPOINTS.EVENTS.GET_GUESTS(eventId));
+        this.eventGuests = response.guests || [];
+      } catch (error) {
+        console.error("Failed to load guests:", error);
+      }
+    },
+
+    async removeGuest(bookingId) {
+      if (!confirm("Are you sure you want to remove this guest? This will free up their seat.")) return;
+      
+      try {
+        await api.delete(API_ENDPOINTS.EVENTS.REMOVE_GUEST(this.editingEvent.id, bookingId));
+        alert("Guest removed successfully!");
+        
+        // Refresh the guest list and the dashboard events (to update seat counts)
+        this.loadEventGuests(this.editingEvent.id);
+        this.fetchDashboardData();
+      } catch (error) {
+        console.error("Failed to remove guest:", error);
+        alert("Error removing guest. Please try again.");
+      }
     },
     
     async saveEventChanges() {

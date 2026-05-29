@@ -364,6 +364,64 @@
   margin-top: 25px;
   justify-content: flex-end;
 }
+/* Guests Section inside Modal */
+.guests-section {
+  margin-top: 15px;
+  margin-bottom: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #E8E0D5;
+}
+
+.guests-section h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #5C4A31;
+  font-size: 1.1rem;
+}
+
+.guest-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.guest-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 0.95rem;
+}
+
+.guest-item:last-child {
+  border-bottom: none;
+}
+
+.btn-remove-guest {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-remove-guest:hover {
+  background-color: #d9363e;
+}
+
+.no-guests-message {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
 
 /* Responsive */
 @media (max-width: 900px) {

@@ -251,4 +251,60 @@ router.delete("/:id", authenticateToken, (req, res) => {
   }
 });
 
+// GET /api/events/:id/guests - Get all guests for a specific event
+router.get("/:id/guests", authenticateToken, (req, res) => {
+  try {
+    const db = getDb();
+    const eventId = req.params.id;
+
+    // Verify user is the host
+    const event = db.prepare("SELECT m.host_id FROM events e JOIN meals m ON e.meal_id = m.id WHERE e.id = ?").get(eventId);
+    if (!event || event.host_id !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const guests = db.prepare(`
+      SELECT b.id as booking_id, u.id as user_id, u.first_name, u.last_name
+      FROM bookings b
+      JOIN users u ON b.guest_id = u.id
+      WHERE b.event_id = ? AND b.status = 'confirmed'
+    `).all(eventId);
+
+    return res.status(200).json({ guests });
+  } catch (error) {
+    console.error("Error fetching guests:", error);
+    return res.status(500).json({ message: "Error fetching guests" });
+  }
+});
+
+// DELETE /api/events/:eventId/guests/:bookingId - Host removes a guest
+router.delete("/:eventId/guests/:bookingId", authenticateToken, (req, res) => {
+  try {
+    const db = getDb();
+    const { eventId, bookingId } = req.params;
+
+    // Verify user is the host
+    const event = db.prepare("SELECT m.host_id FROM events e JOIN meals m ON e.meal_id = m.id WHERE e.id = ?").get(eventId);
+    if (!event || event.host_id !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Safely delete booking and add the seat back using a transaction
+    const cancelTransaction = db.transaction(() => {
+      const booking = db.prepare('SELECT * FROM bookings WHERE id = ? AND event_id = ?').get(bookingId, eventId);
+      if (booking) {
+        db.prepare('DELETE FROM bookings WHERE id = ?').run(bookingId);
+        db.prepare('UPDATE events SET available_seats = available_seats + 1 WHERE id = ?').run(eventId);
+      }
+    });
+
+    cancelTransaction();
+
+    return res.status(200).json({ message: "Guest removed successfully" });
+  } catch (error) {
+    console.error("Error removing guest:", error);
+    return res.status(500).json({ message: "Error removing guest" });
+  }
+});
+
 export default router;
