@@ -1,13 +1,44 @@
 <template>
   <div class="dashboard-page">
     
-    <CreateMealEventModal
-      v-if="showMealEventModal"
-      :userMeals="userMeals"
-      @close="closeMealEventModal"
-      @create-meal="handleCreateMeal"
-      @create-event="handleCreateEvent"
-    />
+  <CreateMealEventModal
+    :isOpen="showMealEventModal"
+    :userMeals="userMeals"
+    @close="closeMealEventModal"
+    @success="fetchDashboardData"
+  />
+  <div v-if="editingEvent" class="modal-overlay" @click.self="closeEditModal">
+      <div class="modal-content edit-event-form">
+        <h3>Edit Event</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-max-guests">Max Guests</label>
+            <input id="edit-max-guests" v-model.number="editingEvent.max_guests" type="number" min="1" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-price">Price per Person ($)</label>
+            <input id="edit-price" v-model.number="editingEvent.price" type="number" min="0.01" step="0.01" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-location">Location Address</label>
+          <input id="edit-location" v-model="editingEvent.location_address" type="text" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-datetime">Date & Time</label>
+          <input id="edit-datetime" v-model="editingEvent.datetime" type="datetime-local" class="form-input" />
+        </div>
+
+        <div class="edit-actions">
+          <button @click="saveEventChanges" class="btn-primary">Save Changes</button>
+          <button @click="closeEditModal" class="btn-outline">Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <main class="page-content">
       <div class="dashboard-split">
@@ -20,7 +51,6 @@
           
           <div v-else class="events-list">
             <div v-for='event in userEvents' :key="event.id" class="event-container">
-              
               <div class="planned-meal-card">
                 <div class="meal-details">
                   <h3>{{event.meal_title}}</h3>
@@ -49,14 +79,14 @@
                 <p><strong>Available Seats:</strong> {{ event.available_seats || 0 }}</p>
                 
                 <div class="card-actions">
-                  <button class="btn-manage">Manage Event</button>
+                  <button class="btn-manage" @click="openEditModal(event)">Manage Event</button>
                 </div>
               </div>
 
             </div>
           </div>
 
-          <button class="btn-create-new" @click="openShareMealModal">+ Create New Meal</button>
+          <button class="btn-create-new" @click="openShareMealModal">Create New Meal</button>
         </section>
 
         <section class="notifications-section">
@@ -96,7 +126,8 @@ export default {
       
       // Modal State (Same as Landing Page)
       showMealEventModal: false,
-      userMeals: []
+      userMeals: [],
+      editingEvent: null
     }
   },
   async mounted() {
@@ -110,6 +141,40 @@ export default {
       } catch (error) {
         console.error("Failed to load dashboard data", error);
       } 
+    },
+
+    openEditModal(event) {
+      // Create a copy of the event so we don't mutate the UI before saving
+      this.editingEvent = { ...event };
+    },
+    
+    closeEditModal() {
+      this.editingEvent = null;
+    },
+    
+    async saveEventChanges() {
+      if (!this.editingEvent) return;
+
+      try {
+        await api.put(
+          API_ENDPOINTS.EVENTS.UPDATE(this.editingEvent.id),
+          {
+            max_guests: this.editingEvent.max_guests,
+            price: this.editingEvent.price,
+            location_address: this.editingEvent.location_address,
+            datetime: this.editingEvent.datetime,
+          }
+        );
+        
+        alert("Event updated successfully!");
+        this.closeEditModal();
+        
+        // Refresh the dashboard data to show the updated event details
+        this.fetchDashboardData(); 
+      } catch (error) {
+        console.error("Error saving event changes:", error);
+        alert("Error saving event changes");
+      }
     },
 
     // --- EXACT METHODS FROM LANDING PAGE ---
