@@ -112,6 +112,21 @@
           <br />
           <h3 class="subsection-title">Cuisine Specialties</h3>
         </div>
+
+        <!-- Past Events Hosted Section -->
+        <div class="past-events-section" v-if="pastHostedEvents && pastHostedEvents.length > 0">
+          <h2 class="section-title">Past Events</h2>
+          <div class="past-events-grid">
+            <div v-for="event in pastHostedEvents" :key="event.eventId" class="past-event-card">
+              <h4 class="past-event-title">{{ event.mealTitle }}</h4>
+              <span class="past-event-rating" v-if="event.avgRating">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#ebb65b" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                {{ event.avgRating }}/5
+              </span>
+              <span class="past-event-rating no-rating" v-else>No ratings yet</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- My Meals Tab -->
@@ -281,6 +296,7 @@ export default {
       userMeals: [],
       userEvents: [],
       editingEvent: null,
+      pastHostedEvents: [],
     };
   },
   computed: {
@@ -399,6 +415,7 @@ export default {
       this.stats.mealsAttended = response.stats.mealsAttended || 0;
       this.stats.hostedEvents = response.stats.hostedEvents;
       this.receivedReviews = response.receivedReviews || [];
+      this.pastHostedEvents = response.pastHostedEvents || [];
     } catch (error) {
       console.error("Failed to load profile stats:", error);
     }

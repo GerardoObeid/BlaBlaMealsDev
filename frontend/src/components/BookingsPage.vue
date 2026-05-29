@@ -49,15 +49,49 @@
             </div>
             
             <div class="card-actions">
-              <button class="btn-cancel" @click="cancelBooking(booking.bookingId)">
+              <!-- Future event: Cancel button -->
+              <button v-if="!isPastEvent(booking.eventDate)" 
+                      class="btn-cancel" @click="cancelBooking(booking.bookingId)">
                 Cancel
               </button>
+              <!-- Past confirmed event, not yet rated: Rate button -->
+              <button v-else-if="booking.status === 'confirmed' && !booking.ratingValue" 
+                      class="btn-rate" @click="openRatingModal(booking.bookingId)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Rate
+              </button>
+              <!-- Past confirmed event, already rated: display rating -->
+              <span v-else-if="booking.ratingValue" class="rating-badge">
+                Rated: {{ booking.ratingValue }}/5
+              </span>
             </div>
           </div>
 
         </div>
       </div>
     </main>
+
+    <!-- Rating Modal -->
+    <div v-if="showRatingModal" class="rating-modal-overlay" @click.self="closeRatingModal">
+      <div class="rating-modal">
+        <h3>Rate this meal</h3>
+        <p class="rating-subtitle">How was your experience?</p>
+        <div class="rating-options">
+          <button v-for="n in 5" :key="n"
+                  :class="['rating-option', { selected: ratingValue === n }]"
+                  @click="ratingValue = n">
+            {{ n }}
+          </button>
+        </div>
+        <p class="rating-label">{{ ratingValue ? ratingValue + ' / 5' : 'Select a rating' }}</p>
+        <div class="modal-actions">
+          <button class="btn-submit-rating" :disabled="!ratingValue" @click="submitRating">
+            Confirm
+          </button>
+          <button class="btn-cancel-rating" @click="closeRatingModal">Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <footer class="footer">
       <div class="footer-content">
@@ -102,7 +136,10 @@ export default {
     return {
       bookings: [],
       isLoading: true,
-      expandedMenus: [] // Array to track which booking IDs have their menu expanded
+      expandedMenus: [], // Array to track which booking IDs have their menu expanded
+      showRatingModal: false,
+      selectedBookingId: null,
+      ratingValue: null
     };
   },
   methods: {
@@ -127,6 +164,11 @@ export default {
     },
     isExpanded(bookingId) {
       return this.expandedMenus.includes(bookingId);
+    },
+    isPastEvent(dateString) {
+      if (!dateString) return false;
+      const eventDate = new Date(dateString.replace(' ', 'T'));
+      return eventDate < new Date();
     },
     // Formats ISO string into DD/MM like the mockup
     formatDate(dateString) {
@@ -153,6 +195,37 @@ export default {
       } catch (error) {
         console.error("Error cancelling booking:", error);
         toast.error(error.message || "Failed to cancel booking");
+      }
+    },
+    openRatingModal(bookingId) {
+      this.selectedBookingId = bookingId;
+      this.ratingValue = null;
+      this.showRatingModal = true;
+    },
+    closeRatingModal() {
+      this.showRatingModal = false;
+      this.selectedBookingId = null;
+      this.ratingValue = null;
+    },
+    async submitRating() {
+      if (!this.ratingValue || !this.selectedBookingId) return;
+
+      try {
+        await api.post(API_ENDPOINTS.BOOKINGS.RATE(this.selectedBookingId), {
+          rating: this.ratingValue
+        });
+
+        // Update the local booking's ratingValue so the UI reflects the change
+        const booking = this.bookings.find(b => b.bookingId === this.selectedBookingId);
+        if (booking) {
+          booking.ratingValue = this.ratingValue;
+        }
+
+        toast.success("Rating submitted successfully!");
+        this.closeRatingModal();
+      } catch (error) {
+        console.error("Error submitting rating:", error);
+        toast.error(error.message || "Failed to submit rating");
       }
     }
   },

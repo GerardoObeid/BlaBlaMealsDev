@@ -3,6 +3,7 @@ import { getDb } from '../db/db.js';
 import { authMiddleware } from '../middleware.js';
 import { authenticateToken } from './auth.js';
 
+
 const router = express.Router();
 
 // GET /api/bookings
@@ -25,11 +26,13 @@ router.get('/', authMiddleware, (req, res) => {
                 m.ingredients,
                 u.first_name as hostFirstName,
                 u.last_name as hostLastName,
-                u.profile_pic_url as hostProfilePic
+                u.profile_pic_url as hostProfilePic,
+                r.rating as ratingValue
             FROM bookings b
             JOIN events e ON b.event_id = e.id
             JOIN meals m ON e.meal_id = m.id
             JOIN users u ON m.host_id = u.id
+            LEFT JOIN ratings r ON r.booking_id = b.id AND r.reviewer_id = b.guest_id
             WHERE b.guest_id = ?
             ORDER BY e.datetime DESC
         `);
@@ -128,6 +131,61 @@ router.delete('/:id', authenticateToken, (req, res) => {
     } catch (error) {
         console.error('Error cancelling booking:', error);
         return res.status(500).json({ message: 'Internal server error while cancelling booking' });
+    }
+});
+
+// POST /api/bookings/:id/rate
+// Submit a rating for a past booking
+router.post('/:id/rate', authenticateToken, (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        const userId = req.user.id;
+        const { rating } = req.body;
+
+        const db = getDb();
+
+        // Validate rating value (integer 1-5)
+        if (!rating || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+            return res.status(400).json({ message: 'Rating must be an integer between 1 and 5' });
+        }
+
+        // Verify booking exists and belongs to the user
+        const booking = db.prepare(`
+            SELECT b.*, e.datetime as eventDate
+            FROM bookings b
+            JOIN events e ON b.event_id = e.id
+            WHERE b.id = ? AND b.guest_id = ?
+        `).get(bookingId, userId);
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found or unauthorized' });
+        }
+
+        // Verify event is in the past
+        const eventDate = new Date(booking.eventDate.replace(' ', 'T'));
+        if (eventDate > new Date()) {
+            return res.status(400).json({ message: 'Cannot rate a future event' });
+        }
+
+        // Check for existing rating (one-shot, no edits)
+        const existingRating = db.prepare(
+            'SELECT id FROM ratings WHERE booking_id = ? AND reviewer_id = ?'
+        ).get(bookingId, userId);
+
+        if (existingRating) {
+            return res.status(409).json({ message: 'You have already rated this booking' });
+        }
+
+        // Insert the rating
+        db.prepare(
+            'INSERT INTO ratings (booking_id, reviewer_id, rating) VALUES (?, ?, ?)'
+        ).run(bookingId, userId, rating);
+
+        return res.status(201).json({ rating });
+
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        return res.status(500).json({ message: 'Internal server error while submitting rating' });
     }
 });
 

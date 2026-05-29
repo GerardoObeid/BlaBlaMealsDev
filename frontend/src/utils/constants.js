@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
     CREATE: "/api/bookings",
     LIST: "/api/bookings",
     DELETE: (id) => `/api/bookings/${id}`,
+    RATE: (id) => `/api/bookings/${id}/rate`,
   },
   USERS: {
     PROFILE: "/api/users/profile",
