@@ -54,13 +54,13 @@ router.get("/search", (req, res) => {
     `;
     const params = [];
 
-    // If authenticated, exclude events the user has already booked
+    // If authenticated, exclude events the user has already booked or created
     if (userId) {
       sql += ` AND NOT EXISTS (
         SELECT 1 FROM bookings b
         WHERE b.event_id = e.id AND b.guest_id = ? AND b.status = 'confirmed'
-      )`;
-      params.push(userId);
+      ) AND u.id != ?`;
+      params.push(userId, userId);
     }
 
     // Date filter: match events on this specific day
