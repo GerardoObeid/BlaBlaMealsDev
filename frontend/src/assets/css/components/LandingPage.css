@@ -148,8 +148,24 @@
 }
 
 .card-icon {
-  font-size: 2.5rem;
   margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+}
+
+.value-icon {
+  width: 48px;
+  height: 48px;
+  stroke: var(--primary-color);
+  stroke-width: 1.75;
+  transition: transform var(--transition-fast), stroke var(--transition-fast);
+}
+
+.value-card:hover .value-icon {
+  transform: translateY(-4px) scale(1.08);
+  stroke: var(--primary-dark);
 }
 
 .value-card h3 {
