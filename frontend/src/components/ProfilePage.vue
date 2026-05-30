@@ -14,7 +14,6 @@
         >
           My Meals
         </button>
-        
       </div>
 
       <!-- Profile Tab -->
@@ -109,16 +108,35 @@
         </div>
 
         <!-- Past Events Hosted Section -->
-        <div class="past-events-section" v-if="pastHostedEvents && pastHostedEvents.length > 0">
+        <div
+          class="past-events-section"
+          v-if="pastHostedEvents && pastHostedEvents.length > 0"
+        >
           <h2 class="section-title">Past Events</h2>
           <div class="past-events-grid">
-            <div v-for="event in pastHostedEvents" :key="event.eventId" class="past-event-card">
+            <div
+              v-for="event in pastHostedEvents"
+              :key="event.eventId"
+              class="past-event-card"
+            >
               <h4 class="past-event-title">{{ event.mealTitle }}</h4>
               <span class="past-event-rating" v-if="event.avgRating">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#ebb65b" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="#ebb65b"
+                  stroke="none"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
+                </svg>
                 {{ event.avgRating }}/5
               </span>
-              <span class="past-event-rating no-rating" v-else>No ratings yet</span>
+              <span class="past-event-rating no-rating" v-else
+                >No ratings yet</span
+              >
             </div>
           </div>
         </div>
@@ -149,40 +167,14 @@
           </div>
         </div>
       </section>
-
-      
     </main>
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>Use cases</h4>
-          <ul>
-            <li><a href="#0">UI design</a></li>
-            <li><a href="#0">UX design</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="#0">Design</a></li>
-            <li><a href="#0">Prototyping</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#0">Blog</a></li>
-            <li><a href="#0">Best practices</a></li>
-          </ul>
-        </div>
-      </div>
-      <p>&copy; 2026 Bla Bla Meals. Share your home-cooked passion.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Footer from "./Footer.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
 import { API_ENDPOINTS } from "../utils/constants";
@@ -190,7 +182,9 @@ import { helpers } from "../utils/helpers";
 
 export default {
   name: "ProfilePage",
-  components: {},
+  components: {
+    Footer,
+  },
   data() {
     return {
       activeTab: "profile",

@@ -1,54 +1,86 @@
 <template>
   <div class="dashboard-page">
-    
-  <CreateMealEventModal
-    :isOpen="showMealEventModal"
-    :userMeals="userMeals"
-    @close="closeMealEventModal"
-    @success="fetchDashboardData"
-  />
-  <div v-if="editingEvent" class="modal-overlay" @click.self="closeEditModal">
+    <CreateMealEventModal
+      :isOpen="showMealEventModal"
+      :userMeals="userMeals"
+      @close="closeMealEventModal"
+      @success="fetchDashboardData"
+    />
+    <div v-if="editingEvent" class="modal-overlay" @click.self="closeEditModal">
       <div class="modal-content edit-event-form">
         <h3>Edit Event</h3>
-        
+
         <div class="form-row">
           <div class="form-group">
             <label for="edit-max-guests">Max Guests</label>
-            <input id="edit-max-guests" v-model.number="editingEvent.max_guests" type="number" min="1" class="form-input" />
+            <input
+              id="edit-max-guests"
+              v-model.number="editingEvent.max_guests"
+              type="number"
+              min="1"
+              class="form-input"
+            />
           </div>
 
           <div class="form-group">
             <label for="edit-price">Price per Person ($)</label>
-            <input id="edit-price" v-model.number="editingEvent.price" type="number" min="0.01" step="0.01" class="form-input" />
+            <input
+              id="edit-price"
+              v-model.number="editingEvent.price"
+              type="number"
+              min="0.01"
+              step="0.01"
+              class="form-input"
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label for="edit-location">Location Address</label>
-          <input id="edit-location" v-model="editingEvent.location_address" type="text" class="form-input" />
+          <input
+            id="edit-location"
+            v-model="editingEvent.location_address"
+            type="text"
+            class="form-input"
+          />
         </div>
-
-        
 
         <div class="form-group">
           <label for="edit-datetime">Date & Time</label>
-          <input id="edit-datetime" v-model="editingEvent.datetime" type="datetime-local" class="form-input" />
+          <input
+            id="edit-datetime"
+            v-model="editingEvent.datetime"
+            type="datetime-local"
+            class="form-input"
+          />
         </div>
 
         <div class="guests-section">
           <h4>Guests ({{ eventGuests.length }})</h4>
           <ul v-if="eventGuests.length > 0" class="guest-list">
-            <li v-for="guest in eventGuests" :key="guest.booking_id" class="guest-item">
+            <li
+              v-for="guest in eventGuests"
+              :key="guest.booking_id"
+              class="guest-item"
+            >
               <span>{{ guest.first_name }} {{ guest.last_name }}</span>
-              <button @click.prevent="removeGuest(guest.booking_id)" class="btn-remove-guest">Remove</button>
+              <button
+                @click.prevent="removeGuest(guest.booking_id)"
+                class="btn-remove-guest"
+              >
+                Remove
+              </button>
             </li>
           </ul>
-          <p v-else class="no-guests-message">No guests have booked this event yet.</p>
+          <p v-else class="no-guests-message">
+            No guests have booked this event yet.
+          </p>
         </div>
-        
 
         <div class="edit-actions">
-          <button @click="saveEventChanges" class="btn-primary">Save Changes</button>
+          <button @click="saveEventChanges" class="btn-primary">
+            Save Changes
+          </button>
           <button @click="closeEditModal" class="btn-outline">Cancel</button>
         </div>
       </div>
@@ -56,79 +88,164 @@
 
     <main class="page-content">
       <div class="dashboard-split">
-        
         <section class="planned-meals-section">
           <h2 class="section-title">Planned Events</h2>
           <p v-if="userEvents.length === 0" class="no-items-message">
             No meals yet. Create your first meal to share with the community!
           </p>
-          
+
           <div v-else class="events-list">
-            <div v-for='event in userEvents' :key="event.id" class="event-container">
+            <div
+              v-for="event in userEvents"
+              :key="event.id"
+              class="event-container"
+            >
               <div class="planned-meal-card">
                 <div class="meal-details">
-                  <h3>{{event.meal_title}}</h3>
-                  
+                  <h3>{{ event.meal_title }}</h3>
+
                   <div class="menu-toggle" @click="toggleDetails(event.id)">
-                    <svg v-if="!isExpanded(event.id)" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg
+                      v-if="!isExpanded(event.id)"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <svg
+                      v-else
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
                     <span>See Details</span>
                   </div>
                 </div>
-                
+
                 <div class="meal-datetime">
                   <div class="datetime-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    <span>{{formatDate(event.datetime)}}</span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="4"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>{{ formatDate(event.datetime) }}</span>
                   </div>
                   <div class="datetime-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <span>{{formatTime(event.datetime)}}</span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>{{ formatTime(event.datetime) }}</span>
                   </div>
                 </div>
               </div>
 
               <div class="card-details" v-show="isExpanded(event.id)">
-                <p><strong>Location:</strong> {{ event.location_address || 'Not specified' }}</p>
-                <p><strong>Available Seats:</strong> {{ event.available_seats || 0 }}</p>
-                
+                <p>
+                  <strong>Location:</strong>
+                  {{ event.location_address || "Not specified" }}
+                </p>
+                <p>
+                  <strong>Available Seats:</strong>
+                  {{ event.available_seats || 0 }}
+                </p>
+
                 <div class="card-actions">
-                  <button class="btn-manage" @click="openEditModal(event)">Manage Event</button>
+                  <button class="btn-manage" @click="openEditModal(event)">
+                    Manage Event
+                  </button>
                 </div>
               </div>
-
             </div>
           </div>
 
-          <button class="btn-create-new" @click="openShareMealModal">Create New Meal</button>
+          <button class="btn-create-new" @click="openShareMealModal">
+            Create New Meal
+          </button>
         </section>
 
         <section class="notifications-section">
           <div class="notifications-card">
             <h2 class="section-title">Notifications</h2>
-            
+
             <ul v-if="notifications.length > 0" class="notification-list">
-              <li v-for="notif in notifications" :key="notif.id" class="notification-item">
+              <li
+                v-for="notif in notifications"
+                :key="notif.id"
+                class="notification-item"
+              >
                 <div class="notif-content">
                   <strong>{{ notif.title }}</strong>
                   <p>{{ notif.message }}</p>
                 </div>
-                <button class="btn-dismiss" @click="dismissNotification(notif.id)" title="Mark as read">✕</button>
+                <button
+                  class="btn-dismiss"
+                  @click="dismissNotification(notif.id)"
+                  title="Mark as read"
+                >
+                  ✕
+                </button>
               </li>
             </ul>
-            
-            <p v-else class="no-items-message" style="margin-top: 15px; text-align: center; color: #666;">
+
+            <p
+              v-else
+              class="no-items-message"
+              style="margin-top: 15px; text-align: center; color: #666"
+            >
               You have no new notifications.
             </p>
           </div>
         </section>
-
       </div>
     </main>
 
-    </div>
+    <Footer />
+  </div>
 </template>
 <script>
+import Footer from "./Footer.vue";
 import Navbar from "./Navbar.vue";
 import CreateMealEventModal from "./CreateMealEventModal.vue"; // 1. Import
 import { authService } from "../services/authService"; // 2. Import auth
@@ -139,21 +256,22 @@ import { toast } from "../utils/toast";
 export default {
   name: "DashboardPage",
   components: {
+    Footer,
     Navbar,
-    CreateMealEventModal // Register
+    CreateMealEventModal, // Register
   },
   data() {
     return {
       userEvents: [],
       notifications: [],
       expandedEvents: [],
-      
+
       // Modal State (Same as Landing Page)
       showMealEventModal: false,
       userMeals: [],
       editingEvent: null,
-      eventGuests: []
-    }
+      eventGuests: [],
+    };
   },
   async mounted() {
     await this.fetchDashboardData();
@@ -162,25 +280,28 @@ export default {
     async fetchDashboardData() {
       try {
         // 1. Fetch the user's events
-        const responseEvents = await api.get(API_ENDPOINTS.EVENTS.GET_USER_EVENTS);
+        const responseEvents = await api.get(
+          API_ENDPOINTS.EVENTS.GET_USER_EVENTS,
+        );
         this.userEvents = responseEvents.events || [];
 
         // 2. Fetch the user's dashboard data (which contains the notifications)
         const dashboardData = await api.get(API_ENDPOINTS.USERS.DASHBOARD);
-        this.notifications = dashboardData.notifications || []; 
-        
+        this.notifications = dashboardData.notifications || [];
       } catch (error) {
         console.error("Failed to load dashboard data", error);
-      } 
+      }
     },
 
     async dismissNotification(notificationId) {
       try {
         // Tell the backend to mark it as read
         await api.put(`/api/users/notifications/${notificationId}/read`);
-        
+
         // Remove it immediately from the frontend UI without reloading the page
-        this.notifications = this.notifications.filter(n => n.id !== notificationId);
+        this.notifications = this.notifications.filter(
+          (n) => n.id !== notificationId,
+        );
       } catch (error) {
         console.error("Failed to dismiss notification:", error);
         alert("Could not dismiss notification. Please try again.");
@@ -192,7 +313,7 @@ export default {
       this.editingEvent = { ...event };
       this.loadEventGuests(event.id);
     },
-    
+
     closeEditModal() {
       this.editingEvent = null;
       this.eventGuests = [];
@@ -200,7 +321,9 @@ export default {
 
     async loadEventGuests(eventId) {
       try {
-        const response = await api.get(API_ENDPOINTS.EVENTS.GET_GUESTS(eventId));
+        const response = await api.get(
+          API_ENDPOINTS.EVENTS.GET_GUESTS(eventId),
+        );
         this.eventGuests = response.guests || [];
       } catch (error) {
         console.error("Failed to load guests:", error);
@@ -208,12 +331,19 @@ export default {
     },
 
     async removeGuest(bookingId) {
-      if (!confirm("Are you sure you want to remove this guest? This will free up their seat.")) return;
-      
+      if (
+        !confirm(
+          "Are you sure you want to remove this guest? This will free up their seat.",
+        )
+      )
+        return;
+
       try {
-        await api.delete(API_ENDPOINTS.EVENTS.REMOVE_GUEST(this.editingEvent.id, bookingId));
+        await api.delete(
+          API_ENDPOINTS.EVENTS.REMOVE_GUEST(this.editingEvent.id, bookingId),
+        );
         alert("Guest removed successfully!");
-        
+
         // Refresh the guest list and the dashboard events (to update seat counts)
         this.loadEventGuests(this.editingEvent.id);
         this.fetchDashboardData();
@@ -222,26 +352,23 @@ export default {
         alert("Error removing guest. Please try again.");
       }
     },
-    
+
     async saveEventChanges() {
       if (!this.editingEvent) return;
 
       try {
-        await api.put(
-          API_ENDPOINTS.EVENTS.UPDATE(this.editingEvent.id),
-          {
-            max_guests: this.editingEvent.max_guests,
-            price: this.editingEvent.price,
-            location_address: this.editingEvent.location_address,
-            datetime: this.editingEvent.datetime,
-          }
-        );
-        
+        await api.put(API_ENDPOINTS.EVENTS.UPDATE(this.editingEvent.id), {
+          max_guests: this.editingEvent.max_guests,
+          price: this.editingEvent.price,
+          location_address: this.editingEvent.location_address,
+          datetime: this.editingEvent.datetime,
+        });
+
         alert("Event updated successfully!");
         this.closeEditModal();
-        
+
         // Refresh the dashboard data to show the updated event details
-        this.fetchDashboardData(); 
+        this.fetchDashboardData();
       } catch (error) {
         console.error("Error saving event changes:", error);
         alert("Error saving event changes");
@@ -275,9 +402,9 @@ export default {
         this.userMeals.push(response.meal);
         alert("Meal created successfully!");
         this.showMealEventModal = false;
-        
+
         // Refresh dashboard to show changes
-        this.fetchDashboardData(); 
+        this.fetchDashboardData();
       } catch (error) {
         console.error("Failed to create meal:", error);
         alert("Error creating meal. Please try again.");
@@ -288,9 +415,9 @@ export default {
         const response = await api.post(API_ENDPOINTS.EVENTS.CREATE, eventData);
         alert("Event created successfully!");
         this.showMealEventModal = false;
-        
+
         // Refresh dashboard to show new event
-        this.fetchDashboardData(); 
+        this.fetchDashboardData();
       } catch (error) {
         console.error("Failed to create event:", error);
         alert("Error creating event. Please try again.");
@@ -312,13 +439,19 @@ export default {
     },
     formatDate(dateString) {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+      });
     },
     formatTime(dateString) {
       const date = new Date(dateString);
-      return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    }
-  }
+      return date.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
+  },
 };
 </script>
 

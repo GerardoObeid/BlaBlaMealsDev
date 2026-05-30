@@ -180,39 +180,14 @@
       </button>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>Use cases</h4>
-          <ul>
-            <li><a href="#0">UI design</a></li>
-            <li><a href="#0">UX design</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="#0">Design</a></li>
-            <li><a href="#0">Prototyping</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#0">Blog</a></li>
-            <li><a href="#0">Best practices</a></li>
-          </ul>
-        </div>
-      </div>
-      <p>&copy; 2026 Bla Bla Meals. Share your home-cooked passion.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { useRouter } from "vue-router";
 import CreateMealEventModal from "./CreateMealEventModal.vue";
+import Footer from "./Footer.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
 import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
@@ -221,6 +196,7 @@ export default {
   name: "LandingPage",
   components: {
     CreateMealEventModal,
+    Footer,
   },
   setup() {
     const router = useRouter();

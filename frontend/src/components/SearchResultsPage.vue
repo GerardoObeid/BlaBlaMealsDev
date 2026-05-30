@@ -83,11 +83,7 @@
     <div v-else-if="results.length > 0" class="results-content">
       <!-- Left: scrollable cards -->
       <div class="results-cards-column">
-        <div
-          class="meal-card"
-          v-for="event in results"
-          :key="event.event_id"
-        >
+        <div class="meal-card" v-for="event in results" :key="event.event_id">
           <div class="card-header">
             <!-- Host avatar placeholder -->
             <div class="host-avatar">
@@ -109,10 +105,7 @@
             <div class="meal-info">
               <h2 class="meal-title">{{ event.meal_title }}</h2>
 
-              <div
-                class="menu-toggle"
-                @click="toggleDetails(event.event_id)"
-              >
+              <div class="menu-toggle" @click="toggleDetails(event.event_id)">
                 <svg
                   v-if="!isExpanded(event.event_id)"
                   width="18"
@@ -165,10 +158,7 @@
           </div>
 
           <!-- Expandable details -->
-          <div
-            class="card-details"
-            v-show="isExpanded(event.event_id)"
-          >
+          <div class="card-details" v-show="isExpanded(event.event_id)">
             <p><strong>Cuisine:</strong> {{ event.cuisine }}</p>
             <p><strong>Description:</strong> {{ event.description }}</p>
             <div class="extra-info">
@@ -177,12 +167,10 @@
                 {{ event.host_last_name }}</span
               >
               <span
-                ><strong>Location:</strong>
-                {{ event.location_address }}</span
+                ><strong>Location:</strong> {{ event.location_address }}</span
               >
               <span
-                ><strong>Seats Left:</strong>
-                {{ event.available_seats }}</span
+                ><strong>Seats Left:</strong> {{ event.available_seats }}</span
               >
               <span
                 ><strong>Price:</strong> €{{
@@ -199,7 +187,7 @@
                 @click="bookEvent(event)"
                 :disabled="event.available_seats < 1"
               >
-                {{ event.available_seats < 1 ? 'Fully Booked' : 'Book' }}
+                {{ event.available_seats < 1 ? "Fully Booked" : "Book" }}
               </button>
             </div>
           </div>
@@ -211,6 +199,8 @@
         <div ref="mapContainer" class="results-map"></div>
       </div>
     </div>
+
+    <Footer />
   </div>
 </template>
 
@@ -230,6 +220,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl,
 });
 
+import Footer from "./Footer.vue";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
 import { API_ENDPOINTS, MEAL_CUISINES } from "../utils/constants";
@@ -237,6 +228,9 @@ import { toast } from "../utils/toast";
 
 export default {
   name: "SearchResultsPage",
+  components: {
+    Footer,
+  },
   data() {
     const now = new Date();
     const year = now.getFullYear();
