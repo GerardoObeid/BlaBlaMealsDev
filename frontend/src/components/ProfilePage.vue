@@ -14,12 +14,7 @@
         >
           My Meals
         </button>
-        <button
-          :class="['tab-btn', { active: activeTab === 'events' }]"
-          @click="activeTab = 'events'"
-        >
-          My Events
-        </button>
+        
       </div>
 
       <!-- Profile Tab -->
@@ -140,91 +135,7 @@
         </div>
       </section>
 
-      <!-- My Events Tab -->
-      <section v-if="activeTab === 'events'" class="management-section">
-        <h2 class="section-title">My Events</h2>
-        <p v-if="userEvents.length === 0" class="no-items-message">
-          No events yet. Create a meal and event to get started!
-        </p>
-        <div v-else class="items-list">
-          <div v-for="event in userEvents" :key="event.id" class="event-item">
-            <div class="item-header">
-              <h3 class="item-title">{{ event.meal_title }}</h3>
-              <span class="event-price">${{ event.price }}/person</span>
-            </div>
-            <p class="item-details">📅 {{ formatDateTime(event.datetime) }}</p>
-            <p class="item-details">📍 {{ event.location_address }}</p>
-            <p class="item-details">
-              👥 {{ event.available_seats }} / {{ event.max_guests }} seats
-              available
-            </p>
-            <div class="event-actions">
-              <button @click="editEvent(event)" class="btn-edit">
-                ✏️ Edit
-              </button>
-              <button @click="deleteEvent(event.id)" class="btn-delete">
-                🗑️ Delete
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Edit Event Form -->
-        <div v-if="editingEvent" class="edit-event-form">
-          <h3>Edit Event</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="edit-max-guests">Max Guests</label>
-              <input
-                id="edit-max-guests"
-                v-model.number="editingEvent.max_guests"
-                type="number"
-                min="1"
-                class="form-input"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="edit-price">Price per Person ($)</label>
-              <input
-                id="edit-price"
-                v-model.number="editingEvent.price"
-                type="number"
-                min="0.01"
-                step="0.01"
-                class="form-input"
-              />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="edit-location">Location Address</label>
-            <input
-              id="edit-location"
-              v-model="editingEvent.location_address"
-              type="text"
-              class="form-input"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="edit-datetime">Date & Time</label>
-            <input
-              id="edit-datetime"
-              v-model="editingEvent.datetime"
-              type="datetime-local"
-              class="form-input"
-            />
-          </div>
-
-          <div class="edit-actions">
-            <button @click="saveEventChanges" class="btn-primary">
-              Save Changes
-            </button>
-            <button @click="cancelEdit" class="btn-outline">Cancel</button>
-          </div>
-        </div>
-      </section>
+      
     </main>
 
     <footer class="footer">

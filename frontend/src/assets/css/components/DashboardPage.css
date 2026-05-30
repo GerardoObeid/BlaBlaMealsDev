@@ -423,6 +423,50 @@
   margin: 0;
 }
 
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  gap: 15px;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-content strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.notif-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.btn-dismiss {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.2s ease;
+}
+
+.btn-dismiss:hover {
+  color: #e74c3c;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .dashboard-split {

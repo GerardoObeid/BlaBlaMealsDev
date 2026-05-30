@@ -106,10 +106,20 @@
         <section class="notifications-section">
           <div class="notifications-card">
             <h2 class="section-title">Notifications</h2>
-            <ul class="notification-list">
-              <li>Pasta Carbonara - New booking: John</li>
-              <li>Sarah has left you a review</li>
+            
+            <ul v-if="notifications.length > 0" class="notification-list">
+              <li v-for="notif in notifications" :key="notif.id" class="notification-item">
+                <div class="notif-content">
+                  <strong>{{ notif.title }}</strong>
+                  <p>{{ notif.message }}</p>
+                </div>
+                <button class="btn-dismiss" @click="dismissNotification(notif.id)" title="Mark as read">✕</button>
+              </li>
             </ul>
+            
+            <p v-else class="no-items-message" style="margin-top: 15px; text-align: center; color: #666;">
+              You have no new notifications.
+            </p>
           </div>
         </section>
 
@@ -153,9 +163,24 @@ export default {
       try {
         const responseEvents = await api.get(API_ENDPOINTS.EVENTS.GET_USER_EVENTS);
         this.userEvents = responseEvents.events || [];
+
+        this.notifications = responseEvents.notifications || []; 
       } catch (error) {
         console.error("Failed to load dashboard data", error);
       } 
+    },
+
+    async dismissNotification(notificationId) {
+      try {
+        // Tell the backend to mark it as read
+        await api.put(`/api/users/notifications/${notificationId}/read`);
+        
+        // Remove it immediately from the frontend UI without reloading the page
+        this.notifications = this.notifications.filter(n => n.id !== notificationId);
+      } catch (error) {
+        console.error("Failed to dismiss notification:", error);
+        alert("Could not dismiss notification. Please try again.");
+      }
     },
 
     openEditModal(event) {

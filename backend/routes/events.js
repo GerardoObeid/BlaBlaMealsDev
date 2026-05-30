@@ -295,6 +295,11 @@ router.delete("/:eventId/guests/:bookingId", authenticateToken, (req, res) => {
       if (booking) {
         db.prepare('DELETE FROM bookings WHERE id = ?').run(bookingId);
         db.prepare('UPDATE events SET available_seats = available_seats + 1 WHERE id = ?').run(eventId);
+        // Notification for the Guest (Host cancelled the booking)
+        db.prepare(
+            `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
+             VALUES (?, 'booking_cancelled_by_host', 'Booking Cancelled', 'The host has cancelled your booking.', ?, 'event')`
+        ).run(booking.guest_id, eventId);
       }
     });
 

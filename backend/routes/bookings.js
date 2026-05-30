@@ -76,9 +76,23 @@ router.post('/', authenticateToken, (req, res) => {
                 'INSERT INTO bookings (event_id, guest_id, guest_count, status) VALUES (?, ?, 1, ?)'
             ).run(eventId, userId, 'confirmed');
 
+            const bookingId = bookingResult.lastInsertRowid;
+
             db.prepare(
                 'UPDATE events SET available_seats = available_seats - 1 WHERE id = ?'
             ).run(eventId);
+
+            // Notification for the Host (Guest booked your event)
+            db.prepare(
+                `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
+                 VALUES (?, 'guest_booked', 'New Booking', ?, ?, 'booking')`
+            ).run(meal.host_id, `A guest has booked your event for ${meal.title}.`, bookingId);
+
+            // Notification for the Guest (You booked an event)
+            db.prepare(
+                `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
+                 VALUES (?, 'you_booked', 'Booking Confirmed', ?, ?, 'booking')`
+            ).run(userId, `You have successfully booked a seat for ${meal.title}.`, bookingId);
         });
 
         bookTransaction();
@@ -115,10 +129,18 @@ router.delete('/:id', authenticateToken, (req, res) => {
             return res.status(404).json({ message: 'Booking not found or unauthorized' });
         }
 
-        // Atomic transaction: delete booking + increment available seats
+        const eventInfo = db.prepare('SELECT m.host_id, m.title FROM events e JOIN meals m ON e.meal_id = m.id WHERE e.id = ?').get(booking.event_id);
+
+        // Atomic transaction: delete booking + increment available seats + create notification
         const cancelTransaction = db.transaction(() => {
             db.prepare('DELETE FROM bookings WHERE id = ?').run(bookingId);
             db.prepare('UPDATE events SET available_seats = available_seats + 1 WHERE id = ?').run(booking.event_id);
+
+            // Notification for the Host (Guest cancelled)
+            db.prepare(
+                `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
+                 VALUES (?, 'guest_cancelled', 'Booking Cancelled', ?, ?, 'event')`
+            ).run(eventInfo.host_id, `A guest cancelled their booking for ${eventInfo.title}.`, booking.event_id);
         });
 
         cancelTransaction();
@@ -131,4 +153,4 @@ router.delete('/:id', authenticateToken, (req, res) => {
     }
 });
 
-export default router;
+    export default router;
