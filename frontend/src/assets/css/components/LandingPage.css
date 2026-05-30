@@ -72,20 +72,6 @@
   line-height: 1.6;
 }
 
-.image-placeholder {
-  width: 100%;
-  height: 300px;
-  background-color: var(--border-light);
-  border-radius: var(--border-radius-xl);
-  overflow: hidden;
-}
-
-.image-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* Search Section */
 .search-section {
   background-color: var(--search-bg);
@@ -117,6 +103,8 @@
 
 .search-field input,
 .search-field select {
+  box-sizing: border-box;
+  height: 48px; /* Force exact uniform height across all browsers */
   padding: var(--spacing-md);
   border: 1px solid var(--border-light);
   border-radius: var(--border-radius-sm);
@@ -125,11 +113,31 @@
   font-family: inherit;
 }
 
+.search-field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  background-size: 14px;
+  padding-right: var(--spacing-2xl) !important;
+}
+
 .search-field select:focus,
 .search-field input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+
+.search-container button,
+.search-container .btn-primary {
+  box-sizing: border-box;
+  height: 48px; /* Perfectly aligns with inputs on all browsers, including Safari */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Value Props */
@@ -148,14 +156,51 @@
 }
 
 .card-icon {
-  font-size: 2.5rem;
   margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+}
+
+.value-icon {
+  width: 48px;
+  height: 48px;
+  stroke: var(--primary-color);
+  stroke-width: 1.75;
+  transition:
+    transform var(--transition-fast),
+    stroke var(--transition-fast);
+}
+
+.value-card:hover .value-icon {
+  transform: translateY(-4px) scale(1.08);
+  stroke: var(--primary-dark);
 }
 
 .value-card h3 {
   font-size: var(--font-size-lg);
   color: var(--text-dark);
   margin-bottom: var(--spacing-md);
+}
+.hero-video,
+.video-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-xl);
+}
+
+.video-placeholder video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right bottom;
+  z-index: 1;
 }
 
 .value-card p {

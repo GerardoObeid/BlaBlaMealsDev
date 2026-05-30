@@ -80,6 +80,24 @@ router.get('/profile', authMiddleware, (req, res) => {
         // Set the freshly computed rating to be returned to the frontend
         userData.rating = averageRating;
 
+        // 7. Fetch past events hosted by this user with average ratings
+        const pastHostedEventsStmt = db.prepare(`
+            SELECT 
+                e.id as eventId,
+                m.title as mealTitle,
+                e.datetime as eventDate,
+                ROUND(AVG(r.rating), 1) as avgRating,
+                COUNT(r.id) as ratingCount
+            FROM events e
+            JOIN meals m ON e.meal_id = m.id
+            LEFT JOIN bookings b ON b.event_id = e.id AND b.status = 'confirmed'
+            LEFT JOIN ratings r ON r.booking_id = b.id
+            WHERE m.host_id = ? AND e.datetime < datetime('now')
+            GROUP BY e.id
+            ORDER BY e.datetime DESC
+        `);
+        const pastHostedEvents = pastHostedEventsStmt.all(userId);
+
 
         return res.status(200).json({
             user: userData,
@@ -88,7 +106,8 @@ router.get('/profile', authMiddleware, (req, res) => {
                 hostedEvents: hostedEventsCount
             },
             attendedMeals : attendedMealsList,
-            receivedReviews : receivedReviewsList
+            receivedReviews : receivedReviewsList,
+            pastHostedEvents: pastHostedEvents
         });
     } catch (error) {
         console.error('Error fetching profile:', error);

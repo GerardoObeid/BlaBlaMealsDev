@@ -2,7 +2,14 @@
   <div class="login-container">
     <div class="login-box">
       <div class="logo-section">
-        <h1 class="logo">🍽️ Bla Bla Meals</h1>
+        <div class="login-logo">
+          <img
+            src="/logo.svg"
+            alt="MealShare Logo"
+            class="login-logo-icon"
+          />
+          <span class="login-logo-text">MealShare</span>
+        </div>
         <p class="tagline">Share Your Home-Cooked Passion</p>
       </div>
 

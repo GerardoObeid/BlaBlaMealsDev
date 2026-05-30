@@ -508,6 +508,68 @@
   font-size: 0.9rem;
 }
 
+/* Past Events Hosted Section */
+.past-events-section {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+}
+
+.past-events-section .section-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.past-events-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.past-event-card {
+  background: #ffffff;
+  border: 1px solid #e8e0d5;
+  border-left: 4px solid #ebb65b;
+  border-radius: 12px;
+  padding: 18px 22px;
+  min-width: 180px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.past-event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(235, 182, 91, 0.15);
+}
+
+.past-event-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.past-event-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #5C4A31;
+}
+
+.past-event-rating.no-rating {
+  color: #aaa;
+  font-weight: 500;
+  font-style: italic;
+}
+
 /* Attended Meals Section */
 .attended-meals-section {
   margin-bottom: 60px;

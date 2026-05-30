@@ -10,7 +10,8 @@
 
 .page-content {
   flex: 1;
-  max-width: 900px; /* Constrains the width to match the mockup's centered look */
+  max-width: 900px;
+  /* Constrains the width to match the mockup's centered look */
   margin: 0 auto;
   padding: 60px 20px;
   width: 100%;
@@ -18,13 +19,15 @@
 
 .page-title {
   text-align: center;
-  color: #5C4A31; /* Earthy brown matching the mockup */
+  color: #5C4A31;
+  /* Earthy brown matching the mockup */
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 50px;
 }
 
-.loading-state, .empty-state {
+.loading-state,
+.empty-state {
   text-align: center;
   padding: 40px;
   font-size: 1.2rem;
@@ -43,7 +46,8 @@
 }
 
 .booking-card {
-  background-color: #F1D395; /* Golden beige matching the mockup */
+  background-color: #F1D395;
+  /* Golden beige matching the mockup */
   border-radius: 16px;
   padding: 24px 30px;
   display: flex;
@@ -106,7 +110,8 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  align-self: flex-end; /* Pushes it to the bottom right of the flex container */
+  align-self: flex-end;
+  /* Pushes it to the bottom right of the flex container */
   color: #222;
   font-weight: 500;
   font-size: 0.95rem;
@@ -168,6 +173,195 @@
   transform: scale(1.03);
 }
 
+/* Rate Button */
+.btn-rate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 23px;
+  /* adjusted slightly for 1px border consistency */
+  background-color: #be8331;
+  /* Earthy brown matching the theme */
+  color: #fff;
+  border: 1px solid #be8331;
+  border-radius: var(--border-radius-md, 8px);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-rate:hover {
+  background-color: #fff;
+  color: #be8331;
+  /* Earthy brown matching the theme for superb readability on white background */
+  border-color: #fff;
+  transform: scale(1.03);
+}
+
+.btn-rate svg {
+  flex-shrink: 0;
+}
+
+/* Rating Badge */
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background-color: rgba(235, 182, 91, 0.15);
+  color: #5C4A31;
+  border: 1px solid #ebb65b;
+  border-radius: var(--border-radius-md, 8px);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+/* Rating Modal Overlay */
+.rating-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Rating Modal Card */
+.rating-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.rating-modal h3 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #5C4A31;
+}
+
+.rating-subtitle {
+  margin: 0 0 28px;
+  font-size: 0.95rem;
+  color: #888;
+}
+
+/* Rating Options (1-5 buttons) */
+.rating-options {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rating-option {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid #e0d6c8;
+  background: #faf7f2;
+  color: #5C4A31;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating-option:hover {
+  border-color: #ebb65b;
+  background-color: rgba(235, 182, 91, 0.1);
+  transform: scale(1.1);
+}
+
+.rating-option.selected {
+  background-color: #ebb65b;
+  border-color: #ebb65b;
+  color: #fff;
+  transform: scale(1.15);
+  box-shadow: 0 4px 14px rgba(235, 182, 91, 0.4);
+}
+
+.rating-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #5C4A31;
+  margin: 0 0 28px;
+  min-height: 1.3em;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-submit-rating {
+  padding: 12px 32px;
+  background-color: #ebb65b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit-rating:hover:not(:disabled) {
+  background-color: #d4a04e;
+  box-shadow: 0 4px 12px rgba(235, 182, 91, 0.35);
+}
+
+.btn-submit-rating:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel-rating {
+  padding: 12px 32px;
+  background-color: transparent;
+  color: #888;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel-rating:hover {
+  background-color: #f5f5f5;
+  color: #555;
+}
+
 .status-badge {
   padding: 2px 8px;
   border-radius: 12px;
@@ -180,14 +374,22 @@
   background-color: #d4edda;
   color: #155724;
 }
+
 .status-badge.cancelled {
   background-color: #f8d7da;
   color: #721c24;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Footer matching other pages */
@@ -245,15 +447,28 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
   .host-avatar {
     margin-bottom: 10px;
   }
+
   .datetime-info {
     align-self: flex-start;
     margin-top: 10px;
   }
+
   .footer-content {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .rating-modal {
+    padding: 30px 20px;
+  }
+
+  .rating-option {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
   }
 }
