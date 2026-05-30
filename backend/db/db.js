@@ -91,9 +91,39 @@ export function initDb() {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
+
+        -- Trigger 1: Decrease seats when a new booking is inserted
+        CREATE TRIGGER IF NOT EXISTS decrease_seats_on_booking
+        AFTER INSERT ON bookings
+        WHEN NEW.status = 'confirmed'
+        BEGIN
+            UPDATE events 
+            SET available_seats = available_seats - NEW.guest_count
+            WHERE id = NEW.event_id;
+        END;
+
+        -- Trigger 2: Increase seats when a booking is deleted/cancelled
+        CREATE TRIGGER IF NOT EXISTS increase_seats_on_cancel
+        AFTER DELETE ON bookings
+        WHEN OLD.status = 'confirmed'
+        BEGIN
+            UPDATE events 
+            SET available_seats = available_seats + OLD.guest_count
+            WHERE id = OLD.event_id;
+        END;
+
+        -- Trigger 3: Adjust seats when a host updates max_guests
+        CREATE TRIGGER IF NOT EXISTS adjust_seats_on_max_guests_update
+        AFTER UPDATE OF max_guests ON events
+        WHEN NEW.max_guests != OLD.max_guests
+        BEGIN
+            UPDATE events 
+            SET available_seats = available_seats + (NEW.max_guests - OLD.max_guests)
+            WHERE id = NEW.id;
+        END;
         `);
 
-  console.log("✓ Database schema initialized successfully");
+  console.log("✓ Database schema and triggers initialized successfully");
   db.close();
 }
 
@@ -229,7 +259,7 @@ export function seedTestData() {
         "2026-06-10 20:00:00",
         "15 Rue de la République, Antibes",
         4,
-        3,
+        4,
         15.5,
         43.5807,
         7.1218,

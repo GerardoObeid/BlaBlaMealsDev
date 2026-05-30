@@ -79,7 +79,8 @@ router.post("/", authenticateToken, (req, res) => {
         .json({ message: "You cannot book your own event" });
     }
 
-    // 3. Atomic transaction: insert booking + decrement available seats
+    // 3. Atomic transaction: insert booking + trigger notifications
+    // (DB trigger automatically decrements available_seats)
     const bookTransaction = db.transaction(() => {
       // 1. Assign the result to bookingResult
       const bookingResult = db
@@ -90,10 +91,6 @@ router.post("/", authenticateToken, (req, res) => {
 
       // 2. Now it can safely extract the ID
       const bookingId = bookingResult.lastInsertRowid;
-
-      db.prepare(
-        "UPDATE events SET available_seats = available_seats - 1 WHERE id = ?",
-      ).run(eventId);
 
       // Notification for the Host (Guest booked your event)
       db.prepare(
@@ -166,12 +163,10 @@ router.delete("/:id", authenticateToken, (req, res) => {
       )
       .get(booking.event_id);
 
-    // Atomic transaction: delete booking + increment available seats + create notification
+    // Atomic transaction: delete booking + create notification
+    // (DB trigger automatically increments available_seats)
     const cancelTransaction = db.transaction(() => {
       db.prepare("DELETE FROM bookings WHERE id = ?").run(bookingId);
-      db.prepare(
-        "UPDATE events SET available_seats = available_seats + 1 WHERE id = ?",
-      ).run(booking.event_id);
 
       // Notification for the Host (Guest cancelled)
       db.prepare(

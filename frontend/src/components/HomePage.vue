@@ -69,6 +69,7 @@
       </div>
     </section>
 
+    <!-- Value Props Section -->
     <section class="value-props">
       <div class="value-card">
         <div class="card-icon">
@@ -96,7 +97,6 @@
           in traditional restaurants.
         </p>
       </div>
-
       <div class="value-card">
         <div class="card-icon">
           <svg
@@ -123,7 +123,6 @@
           conversations, and build genuine community.
         </p>
       </div>
-
       <div class="value-card">
         <div class="card-icon">
           <svg
@@ -229,6 +228,8 @@ export default {
       if (this.form.time) query.time = this.form.time;
       if (this.form.people) query.people = this.form.people;
       if (this.form.cuisine) query.cuisine = this.form.cuisine;
+
+      // The crucial line that makes the search button work:
       this.$router.push({ path: "/search", query });
     },
     openMealModal() {
