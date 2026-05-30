@@ -65,17 +65,19 @@ router.post('/', authenticateToken, (req, res) => {
         }
 
         // 2. Prevent self-booking (user is the host of the meal)
-        const meal = db.prepare('SELECT host_id FROM meals WHERE id = ?').get(event.meal_id);
+        const meal = db.prepare('SELECT host_id, title FROM meals WHERE id = ?').get(event.meal_id);
         if (meal && meal.host_id === userId) {
             return res.status(403).json({ message: 'You cannot book your own event' });
         }
 
         // 3. Atomic transaction: insert booking + decrement available seats
         const bookTransaction = db.transaction(() => {
-            db.prepare(
+            // 1. Assign the result to bookingResult
+            const bookingResult = db.prepare(
                 'INSERT INTO bookings (event_id, guest_id, guest_count, status) VALUES (?, ?, 1, ?)'
             ).run(eventId, userId, 'confirmed');
 
+            // 2. Now it can safely extract the ID
             const bookingId = bookingResult.lastInsertRowid;
 
             db.prepare(
@@ -85,13 +87,13 @@ router.post('/', authenticateToken, (req, res) => {
             // Notification for the Host (Guest booked your event)
             db.prepare(
                 `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
-                 VALUES (?, 'guest_booked', 'New Booking', ?, ?, 'booking')`
+                VALUES (?, 'guest_booked', 'New Booking', ?, ?, 'booking')`
             ).run(meal.host_id, `A guest has booked your event for ${meal.title}.`, bookingId);
 
             // Notification for the Guest (You booked an event)
             db.prepare(
                 `INSERT INTO notifications (user_id, notification_type, title, message, related_entity_id, related_entity_type) 
-                 VALUES (?, 'you_booked', 'Booking Confirmed', ?, ?, 'booking')`
+                VALUES (?, 'you_booked', 'Booking Confirmed', ?, ?, 'booking')`
             ).run(userId, `You have successfully booked a seat for ${meal.title}.`, bookingId);
         });
 

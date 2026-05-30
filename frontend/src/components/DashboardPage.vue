@@ -161,10 +161,14 @@ export default {
   methods: {
     async fetchDashboardData() {
       try {
+        // 1. Fetch the user's events
         const responseEvents = await api.get(API_ENDPOINTS.EVENTS.GET_USER_EVENTS);
         this.userEvents = responseEvents.events || [];
 
-        this.notifications = responseEvents.notifications || []; 
+        // 2. Fetch the user's dashboard data (which contains the notifications)
+        const dashboardData = await api.get(API_ENDPOINTS.USERS.DASHBOARD);
+        this.notifications = dashboardData.notifications || []; 
+        
       } catch (error) {
         console.error("Failed to load dashboard data", error);
       } 
