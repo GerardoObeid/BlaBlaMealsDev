@@ -4,8 +4,8 @@
 .footer {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: var(--text-muted);
-  padding: var(--spacing-5xl) var(--spacing-lg);
-  margin-top: var(--spacing-5xl);
+  padding: var(--spacing-lg) var(--spacing-lg);
+  margin-top: 0;
   border-top: 3px solid var(--primary-color);
 }
 
@@ -19,7 +19,7 @@
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: var(--spacing-5xl);
-  margin-bottom: var(--spacing-5xl);
+  margin-bottom: var(--spacing-md);
   align-items: start;
 }
 
@@ -109,7 +109,7 @@
 .footer-divider {
   height: 1px;
   background: rgba(189, 195, 199, 0.2);
-  margin: var(--spacing-4xl) 0;
+  margin: var(--spacing-sm) 0;
 }
 
 /* Footer Bottom */

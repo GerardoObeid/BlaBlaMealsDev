@@ -19,7 +19,7 @@
 
 .page-title {
   text-align: center;
-  color: #5C4A31;
+  color: #5c4a31;
   /* Earthy brown matching the mockup */
   font-size: 2.5rem;
   font-weight: 800;
@@ -46,7 +46,7 @@
 }
 
 .booking-card {
-  background-color: #F1D395;
+  background-color: #f1d395;
   /* Golden beige matching the mockup */
   border-radius: 16px;
   padding: 24px 30px;
@@ -210,7 +210,7 @@
   gap: 6px;
   padding: 8px 18px;
   background-color: rgba(235, 182, 91, 0.15);
-  color: #5C4A31;
+  color: #5c4a31;
   border: 1px solid #ebb65b;
   border-radius: var(--border-radius-md, 8px);
   font-weight: 700;
@@ -261,7 +261,7 @@
   margin: 0 0 8px;
   font-size: 1.5rem;
   font-weight: 800;
-  color: #5C4A31;
+  color: #5c4a31;
 }
 
 .rating-subtitle {
@@ -284,7 +284,7 @@
   border-radius: 50%;
   border: 2px solid #e0d6c8;
   background: #faf7f2;
-  color: #5C4A31;
+  color: #5c4a31;
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
@@ -311,7 +311,7 @@
 .rating-label {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #5C4A31;
+  color: #5c4a31;
   margin: 0 0 28px;
   min-height: 1.3em;
 }
@@ -392,55 +392,6 @@
   }
 }
 
-/* Footer matching other pages */
-.footer {
-  background-color: var(--footer-bg);
-  color: var(--text-muted);
-  padding: 40px 20px 20px;
-  margin-top: auto;
-}
-
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-5xl);
-  max-width: var(--content-max-width);
-  margin: 0 auto 30px;
-}
-
-.footer-section h4 {
-  color: white;
-  margin-bottom: var(--spacing-xl);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-section li {
-  margin-bottom: var(--spacing-md);
-}
-
-.footer-section a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  transition: color var(--transition-fast);
-}
-
-.footer-section a:hover {
-  color: white;
-}
-
-.footer p {
-  text-align: center;
-  margin-top: 30px;
-}
-
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .card-header {
@@ -455,11 +406,6 @@
   .datetime-info {
     align-self: flex-start;
     margin-top: 10px;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 20px;
   }
 
   .rating-modal {
