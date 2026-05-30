@@ -4,60 +4,141 @@
       <h1 class="page-title">My Bookings</h1>
 
       <div v-if="isLoading" class="loading-state">Loading your bookings...</div>
-      
+
       <div v-else-if="bookings.length === 0" class="empty-state">
         <p>You don't have any bookings yet.</p>
         <router-link to="/home" class="btn-primary">Find a Meal</router-link>
       </div>
 
       <div v-else class="bookings-list">
-        <div class="booking-card" v-for="booking in bookings" :key="booking.bookingId">
-          
+        <div
+          class="booking-card"
+          v-for="booking in bookings"
+          :key="booking.bookingId"
+        >
           <div class="card-header">
-            
-
             <div class="meal-info">
               <h2 class="meal-title">{{ booking.mealTitle }}</h2>
-              
+
               <div class="menu-toggle" @click="toggleMenu(booking.bookingId)">
-                <svg v-if="!isExpanded(booking.bookingId)" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <svg
+                  v-if="!isExpanded(booking.bookingId)"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <svg
+                  v-else
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
                 <span>See Menu</span>
               </div>
             </div>
 
             <div class="datetime-info">
               <div class="info-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 <span>{{ formatDate(booking.eventDate) }}</span>
               </div>
               <div class="info-item">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
                 <span>{{ formatTime(booking.eventDate) }}</span>
               </div>
             </div>
           </div>
 
           <div class="card-details" v-show="isExpanded(booking.bookingId)">
-            <p class="description"><strong>Description:</strong> {{ booking.mealDescription }}</p>
-            <p class="ingredients"><strong>Ingredients:</strong> {{ booking.ingredients }}</p>
+            <p class="description">
+              <strong>Description:</strong> {{ booking.mealDescription }}
+            </p>
+            <p class="ingredients">
+              <strong>Ingredients:</strong> {{ booking.ingredients }}
+            </p>
             <div class="extra-info">
-              <span><strong>Host:</strong> {{ booking.hostFirstName }} {{ booking.hostLastName }}</span>
+              <span
+                ><strong>Host:</strong> {{ booking.hostFirstName }}
+                {{ booking.hostLastName }}</span
+              >
               <span><strong>Location:</strong> {{ booking.location }}</span>
-              <span><strong>Seats Booked:</strong> {{ booking.guestCount }}</span>
-              <span :class="['status-badge', booking.status]">{{ booking.status }}</span>
+              <span
+                ><strong>Seats Booked:</strong> {{ booking.guestCount }}</span
+              >
+              <span :class="['status-badge', booking.status]">{{
+                booking.status
+              }}</span>
             </div>
-            
+
             <div class="card-actions">
               <!-- Future event: Cancel button -->
-              <button v-if="!isPastEvent(booking.eventDate)" 
-                      class="btn-cancel" @click="cancelBooking(booking.bookingId)">
+              <button
+                v-if="!isPastEvent(booking.eventDate)"
+                class="btn-cancel"
+                @click="cancelBooking(booking.bookingId)"
+              >
                 Cancel
               </button>
               <!-- Past confirmed event, not yet rated: Rate button -->
-              <button v-else-if="booking.status === 'confirmed' && !booking.ratingValue" 
-                      class="btn-rate" @click="openRatingModal(booking.bookingId)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <button
+                v-else-if="
+                  booking.status === 'confirmed' && !booking.ratingValue
+                "
+                class="btn-rate"
+                @click="openRatingModal(booking.bookingId)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  stroke="none"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
+                </svg>
                 Rate
               </button>
               <!-- Past confirmed event, already rated: display rating -->
@@ -66,63 +147,53 @@
               </span>
             </div>
           </div>
-
         </div>
       </div>
     </main>
 
     <!-- Rating Modal -->
-    <div v-if="showRatingModal" class="rating-modal-overlay" @click.self="closeRatingModal">
+    <div
+      v-if="showRatingModal"
+      class="rating-modal-overlay"
+      @click.self="closeRatingModal"
+    >
       <div class="rating-modal">
         <h3>Rate this meal</h3>
         <p class="rating-subtitle">How was your experience?</p>
         <div class="rating-options">
-          <button v-for="n in 5" :key="n"
-                  :class="['rating-option', { selected: ratingValue === n }]"
-                  @click="ratingValue = n">
+          <button
+            v-for="n in 5"
+            :key="n"
+            :class="['rating-option', { selected: ratingValue === n }]"
+            @click="ratingValue = n"
+          >
             {{ n }}
           </button>
         </div>
-        <p class="rating-label">{{ ratingValue ? ratingValue + ' / 5' : 'Select a rating' }}</p>
+        <p class="rating-label">
+          {{ ratingValue ? ratingValue + " / 5" : "Select a rating" }}
+        </p>
         <div class="modal-actions">
-          <button class="btn-submit-rating" :disabled="!ratingValue" @click="submitRating">
+          <button
+            class="btn-submit-rating"
+            :disabled="!ratingValue"
+            @click="submitRating"
+          >
             Confirm
           </button>
-          <button class="btn-cancel-rating" @click="closeRatingModal">Cancel</button>
+          <button class="btn-cancel-rating" @click="closeRatingModal">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
 
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>Use cases</h4>
-          <ul>
-            <li><a href="#0">UI design</a></li>
-            <li><a href="#0">UX design</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="#0">Design</a></li>
-            <li><a href="#0">Prototyping</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#0">Blog</a></li>
-            <li><a href="#0">Best practices</a></li>
-          </ul>
-        </div>
-      </div>
-      <p>&copy; 2026 Bla Bla Meals. Share your home-cooked passion.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Footer from "./Footer.vue";
 import Navbar from "./Navbar.vue";
 import { api } from "../services/api";
 import { API_ENDPOINTS } from "../utils/constants";
@@ -131,6 +202,7 @@ import { toast } from "../utils/toast";
 export default {
   name: "BookingsPage",
   components: {
+    Footer,
   },
   data() {
     return {
@@ -139,7 +211,7 @@ export default {
       expandedMenus: [], // Array to track which booking IDs have their menu expanded
       showRatingModal: false,
       selectedBookingId: null,
-      ratingValue: null
+      ratingValue: null,
     };
   },
   methods: {
@@ -167,30 +239,30 @@ export default {
     },
     isPastEvent(dateString) {
       if (!dateString) return false;
-      const eventDate = new Date(dateString.replace(' ', 'T'));
+      const eventDate = new Date(dateString.replace(" ", "T"));
       return eventDate < new Date();
     },
     // Formats ISO string into DD/MM like the mockup
     formatDate(dateString) {
       const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       return `${day}/${month}`;
     },
     // Formats ISO string into HH:MM like the mockup
     formatTime(datetimeStr) {
-      if (!datetimeStr) return '';
-      const date = new Date(datetimeStr.replace(' ', 'T'));
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
+      if (!datetimeStr) return "";
+      const date = new Date(datetimeStr.replace(" ", "T"));
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${hours}:${minutes}`;
     },
     async cancelBooking(bookingId) {
       if (!confirm("Are you sure you want to cancel this booking?")) return;
-      
+
       try {
         await api.delete(API_ENDPOINTS.BOOKINGS.DELETE(bookingId));
-        this.bookings = this.bookings.filter(b => b.bookingId !== bookingId);
+        this.bookings = this.bookings.filter((b) => b.bookingId !== bookingId);
         toast.success("You have deleted a meal successfully");
       } catch (error) {
         console.error("Error cancelling booking:", error);
@@ -212,11 +284,13 @@ export default {
 
       try {
         await api.post(API_ENDPOINTS.BOOKINGS.RATE(this.selectedBookingId), {
-          rating: this.ratingValue
+          rating: this.ratingValue,
         });
 
         // Update the local booking's ratingValue so the UI reflects the change
-        const booking = this.bookings.find(b => b.bookingId === this.selectedBookingId);
+        const booking = this.bookings.find(
+          (b) => b.bookingId === this.selectedBookingId,
+        );
         if (booking) {
           booking.ratingValue = this.ratingValue;
         }
@@ -227,11 +301,11 @@ export default {
         console.error("Error submitting rating:", error);
         toast.error(error.message || "Failed to submit rating");
       }
-    }
+    },
   },
   async mounted() {
     this.fetchBookings();
-  }
+  },
 };
 </script>
 
