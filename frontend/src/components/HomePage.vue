@@ -71,7 +71,24 @@
 
     <section class="value-props">
       <div class="value-card">
-        <div class="card-icon">🥘</div>
+        <div class="card-icon">
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12 2v3M9 2v3M15 2v3M4 11h16a1 1 0 0 1 1 1v3a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6v-3a1 1 0 0 1 1-1z"
+            />
+            <path d="M21 14h2M1 14h2" />
+          </svg>
+        </div>
         <h3>Authenticity</h3>
         <p>
           Skip mass-produced fast food. Enjoy unique, authentic dishes crafted
@@ -79,8 +96,26 @@
           in traditional restaurants.
         </p>
       </div>
+
       <div class="value-card">
-        <div class="card-icon">👥</div>
+        <div class="card-icon">
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
         <h3>Connection</h3>
         <p>
           Come for the flavors, stay for the "bla bla." Turn dining into a
@@ -88,8 +123,24 @@
           conversations, and build genuine community.
         </p>
       </div>
+
       <div class="value-card">
-        <div class="card-icon">💰</div>
+        <div class="card-icon">
+          <svg
+            class="value-icon"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
         <h3>Opportunity</h3>
         <p>
           Monetize your culinary skills to earn supplemental income as a host,
@@ -173,8 +224,12 @@ export default {
   },
   methods: {
     handleSearch() {
-      // TODO: Implement search functionality based on form criteria
-      console.log("Searching with criteria:", this.form);
+      const query = {};
+      if (this.form.date) query.date = this.form.date;
+      if (this.form.time) query.time = this.form.time;
+      if (this.form.people) query.people = this.form.people;
+      if (this.form.cuisine) query.cuisine = this.form.cuisine;
+      this.$router.push({ path: "/search", query });
     },
     openMealModal() {
       this.loadUserMeals();
