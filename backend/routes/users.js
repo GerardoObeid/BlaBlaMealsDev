@@ -132,4 +132,61 @@ router.put('/profile', authMiddleware, (req, res) => {
     }
 });
 
+// GET /api/users/dashboard
+// Fetches all necessary data for the host dashboard
+router.get('/dashboard', authMiddleware, (req, res) => {
+    try {
+        const db = getDb();
+        const userId = req.userId;
+
+        
+
+        // 3. PLANNED MEALS (Upcoming events the user is hosting)
+        const plannedMealsStmt = db.prepare(`
+            SELECT 
+                e.id as eventId,
+                e.datetime,
+                m.title as mealTitle,
+                m.image_url as mealImage
+            FROM events e
+            JOIN meals m ON e.meal_id = m.id
+            WHERE m.host_id = ? AND e.datetime >= datetime('now')
+            ORDER BY e.datetime ASC
+            LIMIT 4
+        `);
+        const plannedMeals = plannedMealsStmt.all(userId);
+
+        // 4. NOTIFICATIONS (Recent bookings received on host's meals)
+        // Note: For a real app, you might UNION this with recent reviews.
+        const notificationsStmt = db.prepare(`
+            SELECT 
+                u.first_name as guestName,
+                m.title as mealTitle,
+                e.datetime as eventDate
+            FROM bookings b
+            JOIN events e ON b.event_id = e.id
+            JOIN meals m ON e.meal_id = m.id
+            JOIN users u ON b.guest_id = u.id
+            WHERE m.host_id = ? AND b.status = 'confirmed'
+            ORDER BY b.id DESC
+            LIMIT 5
+        `);
+        const recentBookings = notificationsStmt.all(userId);
+
+        // Format notifications for the frontend
+        const notifications = recentBookings.map(b => 
+            `${b.mealTitle} - New booking: ${b.guestName}`
+        );
+
+        return res.status(200).json({
+            plannedMeals: plannedMeals,
+            notifications: notifications
+        });
+
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        return res.status(500).json({ message: 'Internal server error while fetching dashboard' });
+    }
+});
+
 export default router;

@@ -30,6 +30,8 @@ export const API_ENDPOINTS = {
     UPDATE: (id) => `/api/events/${id}`,
     DELETE: (id) => `/api/events/${id}`,
     GET_USER_EVENTS: "/api/events/user/events",
+    GET_GUESTS: (id) => `/api/events/${id}/guests`,
+    REMOVE_GUEST: (eventId, bookingId) => `/api/events/${eventId}/guests/${bookingId}`,
   },
   BOOKINGS: {
     CREATE: "/api/bookings",
