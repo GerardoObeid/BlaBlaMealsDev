@@ -156,27 +156,16 @@ router.get('/dashboard', authMiddleware, (req, res) => {
         `);
         const plannedMeals = plannedMealsStmt.all(userId);
 
-        // 4. NOTIFICATIONS (Recent bookings received on host's meals)
-        // Note: For a real app, you might UNION this with recent reviews.
+        
+        // 4. NOTIFICATIONS (Unread notifications from the notifications table)
         const notificationsStmt = db.prepare(`
-            SELECT 
-                u.first_name as guestName,
-                m.title as mealTitle,
-                e.datetime as eventDate
-            FROM bookings b
-            JOIN events e ON b.event_id = e.id
-            JOIN meals m ON e.meal_id = m.id
-            JOIN users u ON b.guest_id = u.id
-            WHERE m.host_id = ? AND b.status = 'confirmed'
-            ORDER BY b.id DESC
-            LIMIT 5
+            SELECT id, title, message, created_at, related_entity_type 
+            FROM notifications 
+            WHERE user_id = ? AND is_read = 0 
+            ORDER BY created_at DESC 
+            LIMIT 15
         `);
-        const recentBookings = notificationsStmt.all(userId);
-
-        // Format notifications for the frontend
-        const notifications = recentBookings.map(b => 
-            `${b.mealTitle} - New booking: ${b.guestName}`
-        );
+        const notifications = notificationsStmt.all(userId);
 
         return res.status(200).json({
             plannedMeals: plannedMeals,
@@ -186,6 +175,29 @@ router.get('/dashboard', authMiddleware, (req, res) => {
     } catch (error) {
         console.error('Error fetching dashboard data:', error);
         return res.status(500).json({ message: 'Internal server error while fetching dashboard' });
+    }
+});
+
+
+// PUT /api/users/notifications/:id/read
+// Marks a specific notification as read so it disappears from the dashboard
+router.put('/notifications/:id/read', authMiddleware, (req, res) => {
+    try {
+        const db = getDb();
+        const userId = req.userId;
+        const notificationId = req.params.id;
+
+        const updateStmt = db.prepare(`UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?`);
+        const result = updateStmt.run(notificationId, userId);
+
+        if (result.changes === 0) {
+            return res.status(404).json({ message: 'Notification not found or unauthorized' });
+        }
+
+        return res.status(200).json({ message: 'Notification marked as read' });
+    } catch (error) {
+        console.error('Error updating notification:', error);
+        return res.status(500).json({ message: 'Internal server error while updating notification' });
     }
 });
 
