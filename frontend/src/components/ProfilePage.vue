@@ -102,8 +102,6 @@
               </template>
             </div>
           </div>
-
-          
         </div>
 
         <!-- Past Events Hosted Section -->
@@ -118,7 +116,7 @@
               :key="event.eventId"
               class="past-event-card"
             >
-              <h4 class="past-event-title">{{ event.mealTitle }}</h4>
+              <h3 class="past-event-title">{{ event.mealTitle }}</h3>
               <span class="past-event-rating" v-if="event.avgRating">
                 <svg
                   width="14"

@@ -42,14 +42,14 @@
 
 .login-logo-text {
   font-size: 2.6rem;
-  color: #2C3E50;
+  color: #2c3e50;
   font-weight: 850;
   letter-spacing: -0.8px;
 }
 
 .tagline {
   font-size: 0.95rem;
-  color: #D4A574;
+  color: var(--primary-color);
   font-style: italic;
 }
 
@@ -63,7 +63,7 @@
   text-align: center;
   margin-top: 30px;
   padding-top: 24px;
-  border-top: 1px solid #E8E0D5;
+  border-top: 1px solid #e8e0d5;
 }
 
 .toggle-section p {
@@ -75,14 +75,14 @@
 .test-credentials {
   margin-top: 30px;
   padding: 20px;
-  background: #F5F0E8;
+  background: #f5f0e8;
   border-radius: var(--border-radius-lg);
   text-align: center;
 }
 
 .test-label {
   font-weight: 600;
-  color: #2C3E50;
+  color: #2c3e50;
   margin-bottom: 12px;
   font-size: 0.9rem;
 }
@@ -106,4 +106,3 @@
     font-size: 16px;
   }
 }
-

@@ -178,7 +178,7 @@
   stroke: var(--primary-dark);
 }
 
-.value-card h3 {
+.value-card h2 {
   font-size: var(--font-size-lg);
   color: var(--text-dark);
   margin-bottom: var(--spacing-md);

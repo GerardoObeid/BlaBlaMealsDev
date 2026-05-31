@@ -90,7 +90,7 @@
             <path d="M21 14h2M1 14h2" />
           </svg>
         </div>
-        <h3>Authenticity</h3>
+        <h2>Authenticity</h2>
         <p>
           Skip mass-produced fast food. Enjoy unique, authentic dishes crafted
           with fresh ingredients, care, and secret family recipes you won't find
@@ -116,7 +116,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
         </div>
-        <h3>Connection</h3>
+        <h2>Connection</h2>
         <p>
           Come for the flavors, stay for the "bla bla." Turn dining into a
           social experience. Break bread with neighbors, share great
@@ -140,7 +140,7 @@
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
         </div>
-        <h3>Opportunity</h3>
+        <h2>Opportunity</h2>
         <p>
           Monetize your culinary skills to earn supplemental income as a host,
           or discover wholesome, high-quality home-cooked meals that perfectly
