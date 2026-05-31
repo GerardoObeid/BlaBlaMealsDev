@@ -9,7 +9,7 @@
 .search-results-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--landing-bg);
   font-family: var(--font-family);
   color: var(--text-dark);
@@ -18,6 +18,17 @@
 /* When authenticated, the global Navbar is rendered above this component,
    so we subtract its height to prevent page-level scrolling */
 .search-results-page.is-authenticated {
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.viewport-section {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  flex: 0 0 auto;
+}
+
+.search-results-page.is-authenticated .viewport-section {
   height: calc(100vh - var(--navbar-height));
 }
 

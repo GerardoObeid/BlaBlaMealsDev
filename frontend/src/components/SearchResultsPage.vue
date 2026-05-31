@@ -3,7 +3,8 @@
     class="search-results-page"
     :class="{ 'is-authenticated': isAuthenticated }"
   >
-    <!-- Header for unauthenticated users (same as LandingPage header) -->
+    <div class="viewport-section">
+      <!-- Header for unauthenticated users (same as LandingPage header) -->
     <header v-if="!isAuthenticated" class="header">
       <div class="header-content">
         <div class="logo" @click="$router.push('/')">
@@ -194,10 +195,11 @@
         </div>
       </div>
 
-      <!-- Right: fixed map -->
+        <!-- Right: fixed map -->
       <div class="results-map-column">
         <div ref="mapContainer" class="results-map"></div>
       </div>
+    </div>
     </div>
 
     <Footer />
