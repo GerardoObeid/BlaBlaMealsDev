@@ -103,8 +103,7 @@
             </div>
           </div>
 
-          <br />
-          <h3 class="subsection-title">Cuisine Specialties</h3>
+          
         </div>
 
         <!-- Past Events Hosted Section -->
