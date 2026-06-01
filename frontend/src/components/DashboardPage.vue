@@ -6,6 +6,7 @@
       @close="closeMealEventModal"
       @success="fetchDashboardData"
     />
+    <h1 class="sr-only">Dashboard</h1>
     <div v-if="editingEvent" class="modal-overlay" @click.self="closeEditModal">
       <div class="modal-content edit-event-form">
         <h3>Edit Event</h3>
@@ -86,7 +87,7 @@
       </div>
     </div>
 
-    <main class="page-content">
+    <div class="page-content">
       <div class="dashboard-split">
         <section class="planned-meals-section">
           <h2 class="section-title">Planned Events</h2>
@@ -239,7 +240,7 @@
           </div>
         </section>
       </div>
-    </main>
+    </div>
 
     <Footer />
   </div>

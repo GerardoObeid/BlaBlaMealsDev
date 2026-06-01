@@ -1,6 +1,7 @@
 <template>
   <div class="profile-page">
-    <main class="page-content">
+    <h1 class="sr-only">Profile Page</h1>
+    <div class="page-content">
       <div class="tabs-header">
         <button
           :class="['tab-btn', { active: activeTab === 'profile' }]"
@@ -164,7 +165,7 @@
           </div>
         </div>
       </section>
-    </main>
+    </div>
 
     <Footer />
   </div>

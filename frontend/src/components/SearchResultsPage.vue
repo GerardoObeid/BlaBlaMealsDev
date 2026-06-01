@@ -5,201 +5,204 @@
   >
     <div class="viewport-section">
       <!-- Header for unauthenticated users (same as LandingPage header) -->
-    <header v-if="!isAuthenticated" class="header">
-      <div class="header-content">
-        <div class="logo" @click="$router.push('/')">
-          <img
-            src="/logo.svg"
-            alt="MealShare Logo"
-            class="logo-icon"
-            style="width: 28px; height: 28px"
-          />
-          <span class="logo-text">MealShare</span>
+      <header v-if="!isAuthenticated" class="header">
+        <div class="header-content">
+          <div class="logo" @click="$router.push('/')">
+            <img
+              src="/logo.svg"
+              alt="MealShare Logo"
+              class="logo-icon"
+              style="width: 28px; height: 28px"
+            />
+            <span class="logo-text">MealShare</span>
+          </div>
+          <nav class="nav">
+            <button class="btn-outline" @click="$router.push('/login')">
+              Login / Sign Up
+            </button>
+          </nav>
         </div>
-        <nav class="nav">
-          <button class="btn-outline" @click="$router.push('/login')">
-            Login / Sign Up
-          </button>
-        </nav>
-      </div>
-    </header>
+      </header>
+      <h1 class="sr-only">Meal Search Results</h1>
+      <!-- Fixed search bar -->
+      <div class="search-bar-fixed">
+        <form @submit.prevent="handleSearch" class="search-bar-container">
+          <div class="search-field">
+            <label for="search-date">Date</label>
+            <input id="search-date" type="date" v-model="form.date" />
+          </div>
 
-    <!-- Fixed search bar -->
-    <div class="search-bar-fixed">
-      <form @submit.prevent="handleSearch" class="search-bar-container">
-        <div class="search-field">
-          <label for="search-date">Date</label>
-          <input id="search-date" type="date" v-model="form.date" />
-        </div>
+          <div class="search-field">
+            <label for="search-time">Hour</label>
+            <input id="search-time" type="time" v-model="form.time" />
+          </div>
 
-        <div class="search-field">
-          <label for="search-time">Hour</label>
-          <input id="search-time" type="time" v-model="form.time" />
-        </div>
+          <div class="search-field">
+            <label for="search-people">Number of people</label>
+            <input
+              id="search-people"
+              type="number"
+              placeholder="1"
+              v-model="form.people"
+            />
+          </div>
 
-        <div class="search-field">
-          <label for="search-people">Number of people</label>
-          <input
-            id="search-people"
-            type="number"
-            placeholder="1"
-            v-model="form.people"
-          />
-        </div>
-
-        <div class="search-field">
-          <label for="search-cuisine">Type of food</label>
-          <select id="search-cuisine" v-model="form.cuisine">
-            <option value="">Any cuisine</option>
-            <option
-              v-for="cuisine in cuisinesList"
-              :key="cuisine"
-              :value="cuisine"
-            >
-              {{ cuisine }}
-            </option>
-          </select>
-        </div>
-
-        <button type="submit" class="btn-primary">Search</button>
-      </form>
-    </div>
-
-    <!-- Loading state -->
-    <div v-if="loading" class="results-loading">
-      <span class="loading-spinner"></span>
-      <p>Searching for meals...</p>
-    </div>
-
-    <!-- No results -->
-    <div
-      v-else-if="searchPerformed && results.length === 0"
-      class="no-results-page"
-    >
-      <img src="/logo.svg" alt="MealShare Logo" class="no-results-logo" />
-      <p>No meals found matching your criteria. Try adjusting your filters!</p>
-    </div>
-
-    <!-- Two-column results -->
-    <div v-else-if="results.length > 0" class="results-content">
-      <!-- Left: scrollable cards -->
-      <div class="results-cards-column">
-        <div class="meal-card" v-for="event in results" :key="event.event_id">
-          <div class="card-header">
-            <!-- Host avatar placeholder -->
-            <div class="host-avatar">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+          <div class="search-field">
+            <label for="search-cuisine">Type of food</label>
+            <select id="search-cuisine" v-model="form.cuisine">
+              <option value="">Any cuisine</option>
+              <option
+                v-for="cuisine in cuisinesList"
+                :key="cuisine"
+                :value="cuisine"
               >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
+                {{ cuisine }}
+              </option>
+            </select>
+          </div>
 
-            <div class="meal-info">
-              <h2 class="meal-title">{{ event.meal_title }}</h2>
+          <button type="submit" class="btn-primary">Search</button>
+        </form>
+      </div>
 
-              <div class="menu-toggle" @click="toggleDetails(event.event_id)">
+      <!-- Loading state -->
+      <div v-if="loading" class="results-loading">
+        <span class="loading-spinner"></span>
+        <p>Searching for meals...</p>
+      </div>
+
+      <!-- No results -->
+      <div
+        v-else-if="searchPerformed && results.length === 0"
+        class="no-results-page"
+      >
+        <img src="/logo.svg" alt="MealShare Logo" class="no-results-logo" />
+        <p>
+          No meals found matching your criteria. Try adjusting your filters!
+        </p>
+      </div>
+
+      <!-- Two-column results -->
+      <div v-else-if="results.length > 0" class="results-content">
+        <!-- Left: scrollable cards -->
+        <div class="results-cards-column">
+          <div class="meal-card" v-for="event in results" :key="event.event_id">
+            <div class="card-header">
+              <!-- Host avatar placeholder -->
+              <div class="host-avatar">
                 <svg
-                  v-if="!isExpanded(event.event_id)"
-                  width="18"
-                  height="18"
+                  width="32"
+                  height="32"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
+                  stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <svg
-                  v-else
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>See Menu</span>
+              </div>
+
+              <div class="meal-info">
+                <h2 class="meal-title">{{ event.meal_title }}</h2>
+
+                <div class="menu-toggle" @click="toggleDetails(event.event_id)">
+                  <svg
+                    v-if="!isExpanded(event.event_id)"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <svg
+                    v-else
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span>See Menu</span>
+                </div>
+              </div>
+
+              <div class="datetime-info">
+                <div class="info-item">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span>{{ formatTime(event.datetime) }}</span>
+                </div>
               </div>
             </div>
 
-            <div class="datetime-info">
-              <div class="info-item">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+            <!-- Expandable details -->
+            <div class="card-details" v-show="isExpanded(event.event_id)">
+              <p><strong>Cuisine:</strong> {{ event.cuisine }}</p>
+              <p><strong>Description:</strong> {{ event.description }}</p>
+              <div class="extra-info">
+                <span
+                  ><strong>Host:</strong> {{ event.host_first_name }}
+                  {{ event.host_last_name }}</span
                 >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <span>{{ formatTime(event.datetime) }}</span>
+                <span
+                  ><strong>Location:</strong> {{ event.location_address }}</span
+                >
+                <span
+                  ><strong>Seats Left:</strong>
+                  {{ event.available_seats }}</span
+                >
+                <span
+                  ><strong>Price:</strong> €{{
+                    Number(event.price).toFixed(2)
+                  }}/person</span
+                >
+                <span
+                  ><strong>Date:</strong> {{ formatDate(event.datetime) }}</span
+                >
+              </div>
+              <div class="card-actions">
+                <button
+                  class="btn-book"
+                  @click="bookEvent(event)"
+                  :disabled="event.available_seats < 1"
+                >
+                  {{ event.available_seats < 1 ? "Fully Booked" : "Book" }}
+                </button>
               </div>
             </div>
           </div>
-
-          <!-- Expandable details -->
-          <div class="card-details" v-show="isExpanded(event.event_id)">
-            <p><strong>Cuisine:</strong> {{ event.cuisine }}</p>
-            <p><strong>Description:</strong> {{ event.description }}</p>
-            <div class="extra-info">
-              <span
-                ><strong>Host:</strong> {{ event.host_first_name }}
-                {{ event.host_last_name }}</span
-              >
-              <span
-                ><strong>Location:</strong> {{ event.location_address }}</span
-              >
-              <span
-                ><strong>Seats Left:</strong> {{ event.available_seats }}</span
-              >
-              <span
-                ><strong>Price:</strong> €{{
-                  Number(event.price).toFixed(2)
-                }}/person</span
-              >
-              <span
-                ><strong>Date:</strong> {{ formatDate(event.datetime) }}</span
-              >
-            </div>
-            <div class="card-actions">
-              <button
-                class="btn-book"
-                @click="bookEvent(event)"
-                :disabled="event.available_seats < 1"
-              >
-                {{ event.available_seats < 1 ? "Fully Booked" : "Book" }}
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
 
         <!-- Right: fixed map -->
-      <div class="results-map-column">
-        <div ref="mapContainer" class="results-map"></div>
+        <div class="results-map-column">
+          <div ref="mapContainer" class="results-map"></div>
+        </div>
       </div>
-    </div>
     </div>
 
     <Footer />
@@ -295,7 +298,7 @@ export default {
         const pos = await new Promise((resolve, reject) =>
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             timeout: 5000,
-          })
+          }),
         );
         this.userLocation = {
           lat: pos.coords.latitude,
@@ -352,10 +355,7 @@ export default {
     async bookEvent(event) {
       // If not authenticated, store intent and redirect to login
       if (!this.isAuthenticated) {
-        sessionStorage.setItem(
-          "pendingBookingEventId",
-          String(event.event_id)
-        );
+        sessionStorage.setItem("pendingBookingEventId", String(event.event_id));
         this.$router.push("/login");
         return;
       }
@@ -399,7 +399,7 @@ export default {
       // Create map
       const map = L.map(mapEl).setView(
         [this.userLocation.lat, this.userLocation.lng],
-        14
+        14,
       );
       this.mapInstance = map;
 
@@ -416,9 +416,7 @@ export default {
       // Event markers
       this.results.forEach((event) => {
         if (event.latitude && event.longitude) {
-          const marker = L.marker([event.latitude, event.longitude]).addTo(
-            map
-          );
+          const marker = L.marker([event.latitude, event.longitude]).addTo(map);
 
           marker.bindPopup(`
             <div style="min-width: 150px;">

@@ -43,6 +43,7 @@
 
     <!-- Search Section -->
     <section class="search-section">
+      <h2 class="sr-only">Search for Meals</h2>
       <div class="search-section">
         <form @submit.prevent="handleSearch" class="search-container">
           <div class="search-field">

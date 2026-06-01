@@ -1,6 +1,6 @@
 <template>
   <div class="bookings-page">
-    <main class="page-content">
+    <div class="page-content">
       <h1 class="page-title">My Bookings</h1>
 
       <div v-if="isLoading" class="loading-state">Loading your bookings...</div>
@@ -149,7 +149,7 @@
           </div>
         </div>
       </div>
-    </main>
+    </div>
 
     <!-- Rating Modal -->
     <div
