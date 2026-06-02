@@ -1,27 +1,51 @@
 # BlaBlaMealsDev
 
-This repository contains the code for the BlaBlaMealsDev project, which is a web application designed to connect people who want to share meals together. The project is divided into two main parts: the frontend and the backend.
+A web application that connects people who want to share meals together. Users can browse meal events, create their own, book reservations, and manage their profiles through an intuitive interface.
+
+**Team:** Gerardo Obeid, Dario Gosmar, Andrea Gaudino
+
+**Course:** EURECOM - Interaction Design and Development of Modern Web Applications
 
 ---
 
+## Project Structure
+
+```
+BlaBlaMealsDev/
+├── frontend/          # Vue.js single-page application
+├── backend/           # Node.js Express API
+├── setup_infra.sh     # Infrastructure setup script
+├── deploy.sh          # Deployment script
+└── README.md          # This file
+```
+
 ## Quick Start
-To start the backend it is necessary to run the following script:
+
+**Backend:**
 
 ```bash
 cd backend
 npm start
-# Backend on http://localhost:3000
+# Runs on http://localhost:3000
 ```
 
----
+**Frontend:**
 
-## Backend
+```bash
+cd frontend
+npm install
+npm run dev
+# Runs on http://localhost:5173
+```
 
-The backend is built using **Node.js and Express.js** (configured for ES modules). The entry point is `server.js`, which is responsible for setting up the core application, enabling CORS for frontend communication, and parsing incoming JSON requests. 
+## Deployment
 
-To keep the application modular and maintainable, the routing is broken down into separate files located in the `routes/` directory. These route files handle specific core domains: authentication (`/api/auth`), users (`/api/users`), meals (`/api/meals`), events (`/api/events`), and bookings (`/api/bookings`). At the end of the request pipeline, centralized error-handling middlewares ensure that unhandled routes (404) and internal server errors (500) are caught gracefully before the server starts on port 3000.
+The application is deployed and accessible at:
 
----
+- **Frontend:** [https://blablamealswebstorage.z28.web.core.windows.net](https://blablamealswebstorage.z28.web.core.windows.net)
+- **Backend:** [https://blablameals-api.azurewebsites.net](https://blablameals-api.azurewebsites.net)
 
-**Team:** Gerardo Obeid, Dario Gosmar, Andrea Gaudino  
-**Course:** EURECOM S8 Web Integration
+## Documentation
+
+- **[Frontend Documentation](./frontend/README.md)** - Vue.js UI, components, and features
+- **[Backend Documentation](./backend/README.md)** - Express.js API, routes, and database structure
