@@ -1,10 +1,44 @@
 # BlaBlaMealsDev
 
-A web application that connects people who want to share meals together. Users can browse meal events, create their own, book reservations, and manage their profiles through an intuitive interface.
+BlaBlaMeals is an innovative, full-stack web application designed to foster community through a shared dining economy. Inspired by the "sharing is caring" model, the platform serves as a bridge between local culinary enthusiasts and hungry guests looking for more than just a restaurant meal.
 
-**Team:** Gerardo Obeid, Dario Gosmar, Andrea Gaudino
+**BlaBlaMealsTeam:** Gerardo Obeid, Dario Gosmar, Andrea Gaudino
 
 **Course:** EURECOM - Interaction Design and Development of Modern Web Applications
+
+## Key Value Propositions
+
+- Authenticity: Guests enjoy unique, home-cooked dishes crafted with fresh ingredients and secret family recipes.
+- Connection: The platform transforms dining into a social event, encouraging meaningful "bla bla" and community building.
+- Opportunity: Hosts can monetize their cooking skills to earn supplemental income, while guests find high-quality meals that fit their budget.
+
+## Core Functionalities:
+
+- Dynamic Discovery: A comprehensive search system that allows guests to filter dining experiences by date, time, group size, and cuisine type.
+- Real-time Management: A robust backend handles atomic booking transactions, ensuring seat availability is updated instantly via database triggers.
+- Trust & Safety: Integrated rating systems allow guests to share feedback on past bookings, maintaining high quality across the community.
+
+## Technology stack:
+
+**Frontend:**
+
+- Vue.js and Node.js for a responsive, interactive user interface.
+- Styling: Modern CSS3
+- Special features:
+  - Sessions stored in localStorage (valid for 1 day)
+  - Leaflet map to find exact locations
+  - Video at landing page
+  - Responsive design optimized for both desktop and mobile devices
+  - Communication with backendvia Fetch API
+  - Forms to capture user input
+
+**Backend:**
+
+- Express.js
+- SQLite persistent storage (with the schemas can be easily migrated to other enterprise-level DBMS like PostgreSQL)
+- Special features:
+  - JWT-based authentication for secure user sessions
+  - Database triggers for real-time booking management
 
 ---
 
