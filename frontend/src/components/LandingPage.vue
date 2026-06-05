@@ -48,7 +48,7 @@
         <form @submit.prevent="handleSearch" class="search-container">
           <div class="search-field">
             <label for="date">Date</label>
-            <input id="date" type="date" v-model="form.date" />
+            <input id="date" type="date" v-model="form.date" :min="minDate" />
           </div>
 
           <div class="search-field">
@@ -217,6 +217,7 @@ export default {
       cuisinesList: MEAL_CUISINES,
       showMealEventModal: false,
       userMeals: [],
+      minDate: `${year}-${month}-${day}`,
       form: {
         date: `${year}-${month}-${day}`,
         time: `${hours}:${minutes}`,

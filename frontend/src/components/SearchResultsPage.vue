@@ -29,7 +29,12 @@
         <form @submit.prevent="handleSearch" class="search-bar-container">
           <div class="search-field">
             <label for="search-date">Date</label>
-            <input id="search-date" type="date" v-model="form.date" />
+            <input
+              id="search-date"
+              type="date"
+              v-model="form.date"
+              :min="minDate"
+            />
           </div>
 
           <div class="search-field">
@@ -249,6 +254,7 @@ export default {
       results: [],
       loading: false,
       searchPerformed: false,
+      minDate: `${year}-${month}-${day}`,
       userLocation: { lat: 43.5808, lng: 7.1239 },
       expandedCards: [],
       mapInstance: null,
